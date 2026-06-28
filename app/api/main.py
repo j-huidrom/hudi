@@ -1,4 +1,13 @@
+from email.mime import message
+
 from fastapi import FastAPI, Request
+from dotenv import load_dotenv
+
+load_dotenv()
+
+from app.core.hudi import HUDI
+
+hudi = HUDI()
 
 app = FastAPI(
     title="HUDI",
@@ -17,13 +26,47 @@ async def alexa(request: Request):
     except Exception:
         print("No JSON body received")
 
+    message = get_alexa_message(payload)
+
+    result = hudi.process(message)
+
     return {
-        "version": "1.0",
-        "response": {
-            "outputSpeech": {
-                "type": "PlainText",
-                "text": "Hello, I am HUDI. Our connection is working."
-            },
-            "shouldEndSession": False
-        }
+    "version": "1.0",
+    "response": {
+        "outputSpeech": {
+            "type": "PlainText",
+            "text": result["response"]
+        },
+        "shouldEndSession": False
+    }
+}
+
+def get_alexa_message(payload):
+
+    request = payload.get("request", {})
+
+    request_type = request.get("type")
+
+    if request_type == "LaunchRequest":
+        return "Hello"
+
+    if request_type == "IntentRequest":
+
+        intent = request.get("intent", {})
+        slots = intent.get("slots", {})
+
+        for slot in slots.values():
+            if "value" in slot:
+                return slot["value"]
+
+        return intent.get("name", "Hello")
+
+    return "Hello"
+
+@app.get("/health")
+async def health():
+    return {
+        "status": "UP",
+        "platform": "HUDI",
+        "version": "0.2.0"
     }
