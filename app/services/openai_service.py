@@ -10,9 +10,10 @@ client = OpenAI(
 
 
 def chat(message: str):
+    model_name = os.getenv("OPENAI_MODEL", "gpt-5.5")
 
     response = client.responses.create(
-    model_name=os.getenv("OPENAI_MODEL", "gpt-5.5"),
+    model_name=model_name,
     input=[
         {
             "role": "system",
