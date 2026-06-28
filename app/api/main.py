@@ -1,5 +1,3 @@
-from email.mime import message
-
 from fastapi import FastAPI, Request
 from dotenv import load_dotenv
 
@@ -61,7 +59,12 @@ def get_alexa_message(payload):
 
         return intent.get("name", "Hello")
 
-    return "Hello"
+    return (
+    "Introduce yourself briefly. "
+    "Mention that you are HUDI. "
+    "Ask how you can help. "
+    "Keep the response under 25 words."
+)
 
 @app.get("/health")
 async def health():
