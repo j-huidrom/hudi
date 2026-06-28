@@ -10,10 +10,13 @@ client = OpenAI(
 
 
 def chat(message: str):
-    model_name = os.getenv("OPENAI_MODEL", "gpt-5.5")
+
+    start = time.perf_counter()
+
+    MODEL = os.getenv("OPENAI_MODEL", "gpt-5.5")
 
     response = client.responses.create(
-    model_name=model_name,
+    model=MODEL,
     input=[
         {
             "role": "system",
@@ -32,7 +35,7 @@ def chat(message: str):
     print("=" * 60)
     print("HUDI OpenAI Call")
     print(f"Latency : {elapsed:.3f}s")
-    print(f"Model   : {model_name}")
+    print(f"Model   : {MODEL}")
     print("=" * 60)
 
     return response.output_text
