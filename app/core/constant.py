@@ -1,0 +1,9 @@
+HUDI_VERSION = "0.3.0"
+
+MAX_OUTPUT_TOKENS = 120
+
+MAX_VOICE_WORDS = 60
+
+COLLEGE = "SMVEC"
+
+CREATOR = "Jashyawanta Huidrom"

@@ -46,7 +46,12 @@ def get_alexa_message(payload):
     request_type = request.get("type")
 
     if request_type == "LaunchRequest":
-        return "Hello"
+        return (
+            "Introduce yourself as HUDI. "
+            "Say you are an AI Engineering Teaching Assistant. "
+            "Invite the student to ask any engineering or AI question. "
+            "Keep it under 25 words."
+        )
 
     if request_type == "IntentRequest":
 
