@@ -7,6 +7,10 @@ from app.core.hudi import HUDI
 
 hudi = HUDI()
 
+from app.core.session_manager import SessionManager
+
+session_manager = SessionManager()
+
 app = FastAPI(
     title="HUDI",
     description="Human Unified Development Intelligence",
@@ -26,7 +30,10 @@ async def alexa(request: Request):
 
     message = get_alexa_message(payload)
 
-    result = hudi.process(message)
+    session_id = get_session_id(payload)
+    session = session_manager.get(session_id)
+
+    result = hudi.process(message, session)
 
     return {
     "version": "1.0",
@@ -70,6 +77,12 @@ def get_alexa_message(payload):
     "Ask how you can help. "
     "Keep the response under 25 words."
 )
+
+def get_session_id(payload):
+
+    session = payload.get("session", {})
+
+    return session.get("sessionId", "default")
 
 @app.get("/health")
 async def health():
