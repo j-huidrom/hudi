@@ -1,3 +1,5 @@
+import json
+
 from fastapi import FastAPI, Request
 from dotenv import load_dotenv
 
@@ -24,7 +26,11 @@ async def alexa(request: Request):
 
     try:
         payload = await request.json()
-        print("Alexa Request:", payload)
+
+        print("=" * 80)
+        print(json.dumps(payload, indent=2))
+        print("=" * 80)
+
     except Exception:
         print("No JSON body received")
 
@@ -57,6 +63,16 @@ def get_alexa_message(payload):
     request = payload.get("request", {})
 
     request_type = request.get("type")
+
+    intent_name = None
+
+    if request_type == "IntentRequest":
+        intent_name = request.get("intent", {}).get("name")
+
+    print("Intent:", intent_name)
+
+    if intent_name == "AMAZON.FallbackIntent":
+        print("Fallback Intent received")
 
     if request_type == "LaunchRequest":
         return (
