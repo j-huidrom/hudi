@@ -33,7 +33,7 @@ def chat(message: str):
                 "content": prompt
             }
         ],
-        max_output_tokens=120
+        max_output_tokens=80
     )
 
     elapsed = time.perf_counter() - start

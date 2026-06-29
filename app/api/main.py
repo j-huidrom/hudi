@@ -36,15 +36,21 @@ async def alexa(request: Request):
     result = hudi.process(message, session)
 
     return {
-    "version": "1.0",
-    "response": {
-        "outputSpeech": {
-            "type": "PlainText",
-            "text": result["response"]
-        },
-        "shouldEndSession": result.get("end_session", False)
+        "version": "1.0",
+        "response": {
+            "outputSpeech": {
+                "type": "PlainText",
+                "text": result["response"]
+            },
+            "reprompt": {
+                "outputSpeech": {
+                    "type": "PlainText",
+                    "text": "I'm listening."
+                }
+            },
+            "shouldEndSession": result.get("end_session", False)
+        }
     }
-}
 
 def get_alexa_message(payload):
 
