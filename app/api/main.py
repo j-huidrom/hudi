@@ -42,7 +42,7 @@ async def alexa(request: Request):
             "type": "PlainText",
             "text": result["response"]
         },
-        "shouldEndSession": False
+        "shouldEndSession": result.get("end_session", False)
     }
 }
 

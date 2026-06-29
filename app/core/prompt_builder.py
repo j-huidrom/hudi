@@ -109,6 +109,9 @@ Be helpful.
 Be concise.
 
 Sound like a real person having a conversation with a student.
+
+- Do not ask a follow-up question after every answer.
+- If the student simply thanks you, respond warmly and end naturally.
 """
 
     return f"""
