@@ -1,31 +1,37 @@
 from openai import OpenAI
 from app.core.logger import log_request
-from app.core.prompt_builder import build_prompt
-
 import os
 import time
 
+from app.core.intent_classifier import classify
+from app.core.prompt_builder import build_prompt
 from app.core.response_formatter import format_response
 
 
-client = OpenAI(
-    api_key=os.getenv("OPENAI_API_KEY")
-)
+client: OpenAI | None = None
 
 
-def chat(message: str):
-
+def chat(
+    message: str,
+    context: str = "",
+    mode: str = "TEACH",
+    intent: str = "general",
+) -> str:
     start = time.perf_counter()
 
     model = os.getenv("OPENAI_MODEL", "gpt-5.5")
 
-    from app.core.intent_classifier import classify
+    if intent == "general":
+        intent = classify(message)
 
-    intent = classify(message)
+    prompt = build_prompt(
+        message=message,
+        mode=mode,
+        context=context,
+        intent=intent,
+    )
 
-    prompt = build_prompt(message, intent)
-
-    response = client.responses.create(
+    response = _get_client().responses.create(
         model=model,
         input=[
             {
@@ -33,7 +39,7 @@ def chat(message: str):
                 "content": prompt
             }
         ],
-        max_output_tokens=80
+        max_output_tokens=_max_output_tokens(message)
     )
 
     elapsed = time.perf_counter() - start
@@ -50,4 +56,30 @@ def chat(message: str):
     answer = format_response(answer)
 
     return answer
+
+
+def _get_client() -> OpenAI:
+    global client
+
+    if client is None:
+        client = OpenAI(
+            api_key=os.getenv("OPENAI_API_KEY")
+        )
+
+    return client
+
+
+def _max_output_tokens(message: str) -> int:
+    detail_requests = (
+        "explain in detail",
+        "detail",
+        "deep",
+        "go deeper",
+        "elaborate",
+    )
+
+    if any(phrase in message.lower() for phrase in detail_requests):
+        return 220
+
+    return 140
 
