@@ -1,0 +1,56 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "engineering buddy",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "ConversationIntent",
+                    "slots": [
+                        {
+                            "name": "query",
+                            "type": "AMAZON.SearchQuery"
+                        }
+                    ],
+                    "samples": [
+                        "help me {query}",
+                        "could you {query}",
+                        "can you {query}",
+                        "please {query}",
+                        "professor {query}",
+                        "sir {query}",
+                        "why is {query}",
+                        "how does {query}",
+                        "who is {query}",
+                        "what is {query}",
+                        "can you explain {query}",
+                        "help me with {query}",
+                        " explain {query}",
+                        "tell me {query}",
+                        "ask {query}"
+                    ]
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.FallbackIntent",
+                    "samples": []
+                }
+            ],
+            "types": []
+        }
+    }
+}
