@@ -1,56 +1,115 @@
 {
-    "interactionModel": {
-        "languageModel": {
-            "invocationName": "engineering buddy",
-            "intents": [
-                {
-                    "name": "AMAZON.CancelIntent",
-                    "samples": []
-                },
-                {
-                    "name": "AMAZON.HelpIntent",
-                    "samples": []
-                },
-                {
-                    "name": "AMAZON.StopIntent",
-                    "samples": []
-                },
-                {
-                    "name": "ConversationIntent",
-                    "slots": [
-                        {
-                            "name": "query",
-                            "type": "AMAZON.SearchQuery"
-                        }
-                    ],
-                    "samples": [
-                        "help me {query}",
-                        "could you {query}",
-                        "can you {query}",
-                        "please {query}",
-                        "professor {query}",
-                        "sir {query}",
-                        "why is {query}",
-                        "how does {query}",
-                        "who is {query}",
-                        "what is {query}",
-                        "can you explain {query}",
-                        "help me with {query}",
-                        " explain {query}",
-                        "tell me {query}",
-                        "ask {query}"
-                    ]
-                },
-                {
-                    "name": "AMAZON.NavigateHomeIntent",
-                    "samples": []
-                },
-                {
-                    "name": "AMAZON.FallbackIntent",
-                    "samples": []
-                }
-            ],
-            "types": []
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "engineering buddy",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        },
+
+        {
+          "name": "StudentProfileIntent",
+          "slots": [
+            {
+              "name": "profile",
+              "type": "AMAZON.SearchQuery"
+            }
+          ],
+          "samples": [
+            "my name is {profile}",
+            "i am {profile}",
+            "i'm {profile}",
+            "call me {profile}",
+            "i am a {profile}",
+            "my profile is {profile}",
+            "i am studying {profile}",
+            "i study {profile}",
+            "i am in {profile}",
+            "i belong to {profile}"
+          ]
+        },
+
+        {
+          "name": "ConversationIntent",
+          "slots": [
+            {
+              "name": "query",
+              "type": "AMAZON.SearchQuery"
+            }
+          ],
+          "samples": [
+            "what is {query}",
+            "who is {query}",
+            "why is {query}",
+            "why does {query}",
+            "how does {query}",
+            "how do i {query}",
+            "tell me about {query}",
+            "explain {query}",
+            "describe {query}",
+            "teach me {query}",
+            "help me understand {query}",
+            "help me with {query}",
+            "can you explain {query}",
+            "can you tell me about {query}",
+            "can you help me with {query}",
+            "please explain {query}",
+            "please tell me about {query}",
+            "please help me {query}",
+            "professor {query}",
+            "sir {query}"
+          ]
+        },
+
+        {
+          "name": "ContinueConversationIntent",
+          "samples": [
+            "continue",
+            "continue please",
+            "go on",
+            "keep going",
+            "tell me more",
+            "explain more",
+            "more",
+            "next",
+            "yes",
+            "okay",
+            "interesting"
+          ]
+        },
+
+        {
+          "name": "GoodbyeIntent",
+          "samples": [
+            "bye",
+            "goodbye",
+            "thank you",
+            "thanks",
+            "that's all",
+            "stop talking",
+            "see you",
+            "talk to you later"
+          ]
         }
+      ],
+      "types": []
     }
+  }
 }
