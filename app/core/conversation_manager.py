@@ -184,19 +184,36 @@ class ConversationManager:
         return intent
 
     def _update_topic(self, session: Session, text: str, intent: str) -> None:
+        """
+        Update the active conversation topic.
+
+        If the detected topic changes, remember the previous topic so HUDI
+        knows the student intentionally switched context.
+        """
+
+        session.topic_changed = False
+
+        # Continuation phrases should stay on the current topic.
         if self._is_continuation(text) and session.current_topic:
             return
 
-        topic = self._topic_from_text(text)
+        new_topic = self._topic_from_text(text)
 
-        if topic:
-            session.current_topic = topic
-        elif intent == "career":
-            session.current_topic = session.current_topic or "Career"
-        elif intent == "ai":
-            session.current_topic = session.current_topic or "Artificial Intelligence"
-        elif intent == "engineering":
-            session.current_topic = session.current_topic or "Engineering"
+        if not new_topic:
+            if intent == "career":
+                new_topic = "Career"
+            elif intent == "ai":
+                new_topic = "Artificial Intelligence"
+            elif intent == "engineering":
+                new_topic = "Engineering"
+
+        if not new_topic:
+            return
+
+        if session.current_topic != new_topic:
+            session.previous_topic = session.current_topic
+            session.current_topic = new_topic
+            session.topic_changed = True
 
     def _capture_profile_details(self, session: Session, text: str) -> None:
         if not session.profile.branch:

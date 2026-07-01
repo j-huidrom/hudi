@@ -37,8 +37,15 @@ class Professor:
 
         if session.current_topic:
             context.append(f"Current topic is {session.current_topic}.")
-        else:
-            context.append("Current topic is not known yet.")
+
+        if getattr(session, "previous_topic", None):
+            context.append(f"Previous topic was {session.previous_topic}.")
+
+        if getattr(session, "topic_changed", False):
+            context.append(
+                "The student has intentionally started a new topic. "
+                "Do not continue the previous discussion unless they explicitly ask to return to it."
+            )
 
         if session.last_professor_phrase:
             context.append(f"Do not reuse this opening phrase: {session.last_professor_phrase}.")
@@ -47,6 +54,11 @@ class Professor:
             context.append(f"Pending quiz question: {session.pending_quiz_question}.")
 
         if session.history:
+            context.append(
+                "The recent conversation below is background only. "
+                "Always prioritize the student's latest question. "
+                "If the topic_changed flag is true, ignore the previous topic unless the student explicitly refers back to it."
+            )
             context.append("Recent conversation:")
             context.extend(self._format_history(session))
 

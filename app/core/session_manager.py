@@ -5,6 +5,8 @@ from app.core.student_profile import StudentProfile
 
 MAX_HISTORY_EXCHANGES = 10
 SUMMARY_MESSAGE_COUNT = 5
+previous_topic: str | None = None
+topic_changed: bool = False
 
 
 @dataclass
