@@ -33,6 +33,29 @@ async def alexa(request: Request):
 
     except Exception:
         print("No JSON body received")
+        raise
+
+    request_data = payload.get("request", {})
+
+    intent_name = None
+    if request_data.get("type") == "IntentRequest":
+        intent_name = request_data.get("intent", {}).get("name")
+
+    if intent_name in (
+        "GoodbyeIntent",
+        "AMAZON.StopIntent",
+        "AMAZON.CancelIntent",
+    ):
+        return {
+            "version": "1.0",
+            "response": {
+                "outputSpeech": {
+                    "type": "PlainText",
+                    "text": "Goodbye. Have a great day."
+                },
+                "shouldEndSession": True
+            }
+        }
 
     message = get_alexa_message(payload)
 
@@ -77,7 +100,7 @@ def get_alexa_message(payload):
     if request_type == "IntentRequest":
         intent_name = request.get("intent", {}).get("name")
 
-    print("Intent:", intent_name)
+    print("Intent:", intent_name)    
 
     if intent_name == "AMAZON.FallbackIntent":
         print("Fallback Intent received")
