@@ -39,6 +39,10 @@ class HUDI:
 
             active_session.add_exchange(message, answer)
 
+            print(f"Conversation mode: {conversation['mode']}")
+            print(f"Conversation next_state: {conversation['next_state']}")
+            print(f"End session: {conversation['next_state'] == 'GOODBYE'}")
+
             return self._success_response(
                 answer,
                 end_session=conversation["next_state"] == "GOODBYE",
