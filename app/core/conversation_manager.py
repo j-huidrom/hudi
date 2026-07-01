@@ -1,3 +1,7 @@
+from email.mime import text
+
+from requests import session
+
 from app.core.intent_classifier import classify
 from app.core.session_manager import Session
 
@@ -12,6 +16,7 @@ PROJECT = "PROJECT"
 PLACEMENT = "PLACEMENT"
 MOTIVATION = "MOTIVATION"
 GENERAL = "GENERAL"
+ALEXA_FALLBACK = "ALEXA_FALLBACK"
 
 GOODBYE_WORDS = (
     "bye",
@@ -100,6 +105,14 @@ class ConversationManager:
         text = message.lower().strip()
         intent = classify(message)
         session.question_count += 1
+
+        if text == "__alexa_fallback__":
+            return self._transition(
+                session,
+                session.state,
+                ALEXA_FALLBACK,
+                "fallback",
+            )
 
         if self._is_silence(text):
             return self._handle_silence(session, intent)
@@ -291,7 +304,7 @@ class ConversationManager:
         return any(phrase in text for phrase in CONTINUATION_PHRASES)
 
     def _is_silence(self, text: str) -> bool:
-        return text in {"__silence__", "amazon.fallbackintent", "fallbackintent", ""}
+        return text in {"__silence__", ""}
 
     def _extract_name(self, message: str) -> str | None:
         text = message.strip()

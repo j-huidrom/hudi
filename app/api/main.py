@@ -104,7 +104,7 @@ def get_alexa_message(payload):
 
     if intent_name == "AMAZON.FallbackIntent":
         print("Fallback Intent received")
-        return "__silence__"
+        return "__alexa_fallback__"
 
     if request_type == "LaunchRequest":
         return (

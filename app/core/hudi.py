@@ -56,10 +56,19 @@ class HUDI:
         name = session.profile.name
 
         if mode == "ASK_NAME":
-            return "Hello. Before we begin, what's your name?"
+            return "Yellow Buddy! I'm HUDI, your AI Professor. Thank you for having me at the SMVEC Alumni Meet 2026. I'm here to answer your questions about engineering, artificial intelligence, programming, projects, careers, and the future of technology. Think of me as a professor who's always happy to help. Before we begin, may I know your name and what you're studying?"
 
         if mode == "WELCOME_STUDENT":
             return f"Nice to meet you {name}. What would you like to learn?"
+        
+        if mode == "ALEXA_FALLBACK":
+            return (
+                "Sorry! I may not have understood how it was phrased. "
+                "Could you please ask it once more in a different way? "
+                "Beginning with 'Please explain' or 'Tell me about' usually helps me understand better. "
+                "Thank you for your patience."
+            )
+            
 
         if mode == "SILENCE":
             return "I'm still here if you'd like to ask another engineering question."
