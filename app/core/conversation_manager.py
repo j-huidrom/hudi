@@ -1,7 +1,4 @@
 from email.mime import text
-
-from requests import session
-
 from app.core.intent_classifier import classify
 from app.core.session_manager import Session
 
