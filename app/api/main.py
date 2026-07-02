@@ -2,6 +2,8 @@ import json
 
 from fastapi import FastAPI, Request
 from dotenv import load_dotenv
+from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
 
 load_dotenv()
 
