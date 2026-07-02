@@ -169,7 +169,6 @@ async def update_face_state(request: FaceStateRequest):
 
     face_manager.update(
         state=request.state,
-        subtitle=request.subtitle,
         message=request.message,
     )
 
