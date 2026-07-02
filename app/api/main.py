@@ -145,3 +145,9 @@ async def health():
         "platform": "HUDI",
         "version": "0.2.0"
     }
+
+@app.get("/")
+def root():
+    return RedirectResponse("/face")
+
+app.mount("/face", StaticFiles(directory="app/static/face", html=True), name="face")

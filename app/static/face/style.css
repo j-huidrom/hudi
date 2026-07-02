@@ -1,0 +1,116 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    background:#0B0F19;
+
+    color:white;
+
+    font-family:'Poppins',sans-serif;
+
+    height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+.container{
+
+    width:90%;
+
+    max-width:700px;
+
+    text-align:center;
+
+}
+
+.avatar{
+
+    font-size:120px;
+
+    animation:breathe 3s infinite;
+
+}
+
+@keyframes breathe{
+
+    0%{transform:scale(1);}
+    50%{transform:scale(1.05);}
+    100%{transform:scale(1);}
+}
+
+h1{
+
+    font-size:60px;
+
+    color:#FFD54A;
+
+    margin-top:10px;
+
+}
+
+h2{
+
+    font-weight:400;
+
+    color:#dddddd;
+
+}
+
+.tagline{
+
+    margin-top:10px;
+
+    color:#94A3B8;
+
+}
+
+.divider{
+
+    width:180px;
+
+    height:2px;
+
+    background:#FFD54A;
+
+    margin:35px auto;
+
+}
+
+.status{
+
+    font-size:26px;
+
+    font-weight:600;
+
+    color:#FFD54A;
+
+}
+
+.message{
+
+    margin-top:35px;
+
+    font-size:24px;
+
+    line-height:1.8;
+
+}
+
+.footer{
+
+    margin-top:45px;
+
+    color:#94A3B8;
+
+    font-size:20px;
+
+}
