@@ -4,6 +4,8 @@ from fastapi import FastAPI, Request
 from dotenv import load_dotenv
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
+from app.core.face_manager import face_manager
+from pydantic import BaseModel
 
 load_dotenv()
 
@@ -153,3 +155,30 @@ def root():
     return RedirectResponse("/face")
 
 app.mount("/face", StaticFiles(directory="app/static/face", html=True), name="face")
+
+from pydantic import BaseModel
+
+class FaceStateRequest(BaseModel):
+    state: str
+    subtitle: str = ""
+    message: str = ""
+
+
+@app.post("/face/state")
+async def update_face_state(request: FaceStateRequest):
+
+    face_manager.update(
+        state=request.state,
+        subtitle=request.subtitle,
+        message=request.message,
+    )
+
+    return {
+        "success": True
+    }
+
+
+@app.get("/face/state")
+async def get_face_state():
+
+    return face_manager.get()

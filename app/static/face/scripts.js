@@ -1,42 +1,65 @@
-const status=document.getElementById("status");
+const emoji=document.getElementById("emoji");
+const state=document.getElementById("state");
+const subtitle=document.getElementById("subtitle");
 
-const avatar=document.getElementById("avatar");
+function render(data){
 
-const states=[
+    switch(data.state){
 
-{
-status:"🟡 Ready",
-avatar:"😊"
-},
+        case "ready":
 
-{
-status:"👂 Listening",
-avatar:"🙂"
-},
+            emoji.innerHTML="😊";
+            state.innerHTML="🟡 Ready";
+            break;
 
-{
-status:"🤔 Thinking",
-avatar:"🤔"
-},
+        case "listening":
 
-{
-status:"🗣️ Speaking",
-avatar:"😄"
+            emoji.innerHTML="👂";
+            state.innerHTML="👂 Listening";
+            break;
+
+        case "thinking":
+
+            emoji.innerHTML="🤔";
+            state.innerHTML="🤔 Thinking";
+            break;
+
+        case "speaking":
+
+            emoji.innerHTML="🗣️";
+            state.innerHTML="🗣️ Speaking";
+            break;
+
+        default:
+
+            emoji.innerHTML="😊";
+            state.innerHTML="🟡 Ready";
+
+    }
+
+    subtitle.innerHTML=data.message;
+
 }
 
-];
+async function refresh(){
 
-let i=0;
+    try{
 
-setInterval(()=>{
+        const r=await fetch("/face/state");
 
-    i++;
+        const data=await r.json();
 
-    if(i>=states.length)
-        i=0;
+        render(data);
 
-    status.innerHTML=states[i].status;
+    }
+    catch(e){
 
-    avatar.innerHTML=states[i].avatar;
+        console.log(e);
 
-},4000);
+    }
+
+}
+
+refresh();
+
+setInterval(refresh,1000);

@@ -1,116 +1,99 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
 body{
 
-    background:#0B0F19;
+margin:0;
 
-    color:white;
+background:#0B0F19;
 
-    font-family:'Poppins',sans-serif;
+color:white;
 
-    height:100vh;
+font-family:Arial,sans-serif;
 
-    display:flex;
+display:flex;
 
-    justify-content:center;
+justify-content:center;
 
-    align-items:center;
+align-items:center;
+
+height:100vh;
 
 }
 
 .container{
 
-    width:90%;
+width:80%;
 
-    max-width:700px;
-
-    text-align:center;
+text-align:center;
 
 }
 
-.avatar{
+.emoji{
 
-    font-size:120px;
+font-size:100px;
 
-    animation:breathe 3s infinite;
+margin-bottom:20px;
 
-}
-
-@keyframes breathe{
-
-    0%{transform:scale(1);}
-    50%{transform:scale(1.05);}
-    100%{transform:scale(1);}
 }
 
 h1{
 
-    font-size:60px;
+color:#FFD54A;
 
-    color:#FFD54A;
+font-size:60px;
 
-    margin-top:10px;
-
-}
-
-h2{
-
-    font-weight:400;
-
-    color:#dddddd;
+margin:0;
 
 }
 
-.tagline{
+.title{
 
-    margin-top:10px;
+font-size:28px;
 
-    color:#94A3B8;
+color:#cccccc;
+
+margin-top:10px;
+
+}
+
+.state{
+
+margin-top:40px;
+
+font-size:30px;
+
+font-weight:bold;
+
+color:#FFD54A;
 
 }
 
 .divider{
 
-    width:180px;
+width:180px;
 
-    height:2px;
+height:2px;
 
-    background:#FFD54A;
+background:#FFD54A;
 
-    margin:35px auto;
-
-}
-
-.status{
-
-    font-size:26px;
-
-    font-weight:600;
-
-    color:#FFD54A;
+margin:35px auto;
 
 }
 
-.message{
+.subtitle{
 
-    margin-top:35px;
+font-size:30px;
 
-    font-size:24px;
+line-height:1.6;
 
-    line-height:1.8;
+min-height:180px;
 
 }
 
 .footer{
 
-    margin-top:45px;
+margin-top:40px;
 
-    color:#94A3B8;
+color:#888;
 
-    font-size:20px;
+font-size:20px;
 
 }
