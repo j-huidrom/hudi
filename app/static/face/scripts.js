@@ -45,7 +45,7 @@ async function refresh(){
 
     try{
 
-        const r=await fetch("/face/state");
+        const r = await fetch("https://api.huidrom.com/api/face/state");
 
         const data=await r.json();
 

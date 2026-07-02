@@ -164,7 +164,7 @@ class FaceStateRequest(BaseModel):
     message: str = ""
 
 
-@app.post("/face/state")
+@app.post("/api/face/state")
 async def update_face_state(request: FaceStateRequest):
 
     face_manager.update(
@@ -178,7 +178,7 @@ async def update_face_state(request: FaceStateRequest):
     }
 
 
-@app.get("/face/state")
+@app.get("/api/face/state")
 async def get_face_state():
 
     return face_manager.get()
