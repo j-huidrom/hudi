@@ -1,6 +1,11 @@
 const emoji=document.getElementById("emoji");
 const state=document.getElementById("state");
 const subtitle=document.getElementById("subtitle");
+const leftEye=document.getElementById("leftEye");
+leftEye.style.animation="blink 6s infinite";
+rightEye.style.animation="blink 6s infinite";
+const rightEye=document.getElementById("rightEye");
+const mouth=document.getElementById("mouth");
 
 function render(data){
 
@@ -8,26 +13,31 @@ function render(data){
 
         case "ready":
 
-            emoji.innerHTML="😊";
-            state.innerHTML="🟡 Ready";
+            leftEye.style.height="24px";
+            rightEye.style.height="24px";
+            mouth.style.width="70px";
+            mouth.style.height="8px";
             break;
 
         case "listening":
 
-            emoji.innerHTML="👂";
-            state.innerHTML="👂 Listening";
+            leftEye.style.width="30px";
+            rightEye.style.width="30px";
+            mouth.style.width="50px";
+            mouth.style.height="6px";
             break;
 
         case "thinking":
 
-            emoji.innerHTML="🤔";
-            state.innerHTML="🤔 Thinking";
+            leftEye.style.transform="translateY(-4px)";
+            rightEye.style.transform="translateY(-4px)";
+            mouth.style.width="40px";
             break;
 
         case "speaking":
 
-            emoji.innerHTML="🗣️";
-            state.innerHTML="🗣️ Speaking";
+            mouth.style.height="28px";
+            mouth.style.width="40px";
             break;
 
         default:
