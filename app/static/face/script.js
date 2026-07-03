@@ -4,8 +4,24 @@ const subtitle=document.getElementById("subtitle");
 const leftEye=document.getElementById("leftEye");
 leftEye.style.animation="blink 6s infinite";
 rightEye.style.animation="blink 6s infinite";
+
 const rightEye=document.getElementById("rightEye");
 const mouth=document.getElementById("mouth");
+
+function setState(state){
+
+    const face=document.getElementById("face");
+
+    face.classList.remove(
+        "ready",
+        "listening",
+        "thinking",
+        "speaking"
+    );
+
+    face.classList.add(state);
+
+}
 
 function render(data){
 
@@ -47,6 +63,7 @@ function render(data){
 
     }
 
+    setState(data.state);
     subtitle.innerHTML=data.message;
 
 }

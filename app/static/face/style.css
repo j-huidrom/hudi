@@ -110,6 +110,54 @@ font-size:20px;
 
 }
 
+.face.ready .ring-rotator{
+
+    animation:spin 8s linear infinite;
+
+}
+
+.face.ready .ring-glow{
+
+    animation:glow 4s ease-in-out infinite;
+
+}
+
+.face.listening .ring-rotator{
+
+    animation:spin 2.5s linear infinite;
+
+}
+
+.face.listening .ring-glow{
+
+    animation:glow .8s ease-in-out infinite;
+
+}
+
+.face.thinking .ring-rotator{
+
+    animation:spin .8s linear infinite;
+
+}
+
+.face.thinking .ring-glow{
+
+    animation:glow .4s ease-in-out infinite;
+
+}
+
+.face.speaking .ring-rotator{
+
+    animation:spin 1.5s linear infinite;
+
+}
+
+.face.speaking .mouth{
+
+    animation:talk .35s infinite alternate;
+
+}
+
 .face-ring{
 
     width:240px;
@@ -296,5 +344,25 @@ transform:scaleY(.08);
         transform:rotate(360deg);
 
     }
+
+}
+
+@keyframes talk{
+
+0%{
+
+height:8px;
+
+width:60px;
+
+}
+
+100%{
+
+height:28px;
+
+width:34px;
+
+}
 
 }

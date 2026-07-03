@@ -81,26 +81,30 @@ async def alexa(request: Request):
 
     face_manager.update(
         state="listening",
-        message="Listening..."
+        message="I heard you..."
     )
 
-    time.sleep(0.5)
+    
 
     session_id = get_session_id(payload)
     session = session_manager.get(session_id)
 
     face_manager.update(
         state="thinking",
-        message="Thinking..."
+        message="Finding the best answer..."
     )
 
-    time.sleep(0.5)
+    
+    face_manager.update(
+        state="thinking",
+        message="Connecting to my AI brain..."
+    )
 
     result = hudi.process(message, session)
 
     face_manager.update(
-    state="speaking",
-    message=result["response"]
+        state="speaking",
+        message=result["response"]
     )
 
     reset_face()
@@ -181,15 +185,20 @@ def get_session_id(payload):
 
     return session.get("sessionId", "default")
 
-def reset_face():
+def reset_face(response_text: str):
 
     def worker():
 
-        time.sleep(4)
+        words = len(response_text.split())
+
+        # Alexa speaks roughly 2.5 words/sec
+        delay = max(2, words / 2.5)
+
+        time.sleep(delay)
 
         face_manager.update(
             state="ready",
-            message="Waiting for the next student..."
+            message="Ask me anything about AI or Engineering."
         )
 
     threading.Thread(
