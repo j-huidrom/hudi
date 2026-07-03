@@ -9,6 +9,7 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 import threading
 import time
+from fastapi.responses import StreamingResponse
 
 load_dotenv()
 
@@ -226,6 +227,37 @@ class FaceStateRequest(BaseModel):
     state: str
     subtitle: str = ""
     message: str = ""
+
+@app.get("/api/face/events")
+async def face_events():
+
+    listener = face_manager.subscribe()
+
+    async def event_generator():
+
+        try:
+
+            # Send current state immediately
+            yield f"data: {json.dumps(face_manager.get())}\n\n"
+
+            while True:
+
+                event = listener.get()
+
+                yield f"data: {json.dumps(event)}\n\n"
+
+        finally:
+
+            face_manager.unsubscribe(listener)
+
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+        },
+    )
 
 
 @app.post("/api/face/state")

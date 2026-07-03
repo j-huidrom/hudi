@@ -1,5 +1,5 @@
 from threading import Lock
-
+from queue import Queue
 
 class FaceManager:
 
@@ -10,6 +10,7 @@ class FaceManager:
         self.message = (
             "Yellow Buddy! I'm ready for your next engineering question."
         )
+        self.listeners = []
 
     def update(self, state=None, message=None):
 
@@ -21,6 +22,28 @@ class FaceManager:
             if message is not None:
                 self.message = message
 
+            event = {
+                "state": self.state,
+                "message": self.message,
+            }
+
+            dead = []
+
+            for q in self.listeners:
+
+                try:
+
+                    q.put_nowait(event)
+
+                except Exception:
+
+                    dead.append(q)
+
+            for q in dead:
+
+                if q in self.listeners:
+                    self.listeners.remove(q)
+
     def get(self):
 
         with self._lock:
@@ -29,6 +52,21 @@ class FaceManager:
                 "state": self.state,
                 "message": self.message,
             }
+        
+def subscribe(self):
+
+    q = Queue()
+
+    self.listeners.append(q)
+
+    return q
+
+
+def unsubscribe(self, q):
+
+    if q in self.listeners:
+
+        self.listeners.remove(q)        
 
 
 face_manager = FaceManager()

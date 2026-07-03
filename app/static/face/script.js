@@ -25,68 +25,33 @@ function setState(state){
 
 function render(data){
 
-    switch(data.state){
+    document.getElementById("state").innerHTML =
+        data.state.toUpperCase();
 
-        case "ready":
-
-            leftEye.style.height="24px";
-            rightEye.style.height="24px";
-            mouth.style.width="70px";
-            mouth.style.height="8px";
-            break;
-
-        case "listening":
-
-            leftEye.style.width="30px";
-            rightEye.style.width="30px";
-            mouth.style.width="50px";
-            mouth.style.height="6px";
-            break;
-
-        case "thinking":
-
-            leftEye.style.transform="translateY(-4px)";
-            rightEye.style.transform="translateY(-4px)";
-            mouth.style.width="40px";
-            break;
-
-        case "speaking":
-
-            mouth.style.height="28px";
-            mouth.style.width="40px";
-            break;
-
-        default:
-
-            emoji.innerHTML="😊";
-            state.innerHTML="🟡 Ready";
-
-    }
+    document.getElementById("subtitle").innerHTML =
+        data.message;
 
     setState(data.state);
     subtitle.innerHTML=data.message;
 
 }
 
-async function refresh(){
+const source = new EventSource(
+    "https://api.huidrom.com/api/face/events"
+);
 
-    try{
+source.onmessage = (event) => {
 
-        const r = await fetch("https://api.huidrom.com/api/face/state");
+    const data = JSON.parse(event.data);
 
-        const data=await r.json();
+    render(data);
 
-        render(data);
+    setState(data.state);
 
-    }
-    catch(e){
+};
 
-        console.log(e);
+source.onerror = () => {
 
-    }
+    console.log("HUDI Face disconnected...");
 
-}
-
-refresh();
-
-setInterval(refresh,1000);
+};
