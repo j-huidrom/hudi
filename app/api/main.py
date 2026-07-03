@@ -107,7 +107,7 @@ async def alexa(request: Request):
         message=result["response"]
     )
 
-    reset_face()
+    reset_face(result["response"])
 
     print(f"Ending session: {result.get('end_session', False)}")
 
