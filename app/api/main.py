@@ -7,6 +7,8 @@ from fastapi.staticfiles import StaticFiles
 from app.core.face_manager import face_manager
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+import threading
+import time
 
 load_dotenv()
 
@@ -77,10 +79,31 @@ async def alexa(request: Request):
 
     message = get_alexa_message(payload)
 
+    face_manager.update(
+        state="listening",
+        message="Listening..."
+    )
+
+    time.sleep(0.5)
+
     session_id = get_session_id(payload)
     session = session_manager.get(session_id)
 
+    face_manager.update(
+        state="thinking",
+        message="Thinking..."
+    )
+
+    time.sleep(0.5)
+
     result = hudi.process(message, session)
+
+    face_manager.update(
+    state="speaking",
+    message=result["response"]
+    )
+
+    reset_face()
 
     print(f"Ending session: {result.get('end_session', False)}")
 
@@ -150,11 +173,29 @@ def get_alexa_message(payload):
     "Keep the response under 25 words."
 )
 
+
+
 def get_session_id(payload):
 
     session = payload.get("session", {})
 
     return session.get("sessionId", "default")
+
+def reset_face():
+
+    def worker():
+
+        time.sleep(4)
+
+        face_manager.update(
+            state="ready",
+            message="Waiting for the next student..."
+        )
+
+    threading.Thread(
+        target=worker,
+        daemon=True
+    ).start()
 
 @app.get("/health")
 async def health():
