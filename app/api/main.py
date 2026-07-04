@@ -10,6 +10,8 @@ from fastapi.middleware.cors import CORSMiddleware
 import threading
 import time
 from fastapi.responses import StreamingResponse
+from queue import Empty
+import asyncio
 
 load_dotenv()
 
@@ -242,9 +244,17 @@ async def face_events():
 
             while True:
 
-                event = listener.get()
+                try:
+                    event = listener.get(timeout=1)
 
-                yield f"data: {json.dumps(event)}\n\n"
+                    yield f"data: {json.dumps(event)}\n\n"
+
+                except Empty:
+
+                    # heartbeat keeps SSE alive
+                    yield ": ping\n\n"
+
+                    await asyncio.sleep(0)
 
         finally:
 
@@ -256,6 +266,7 @@ async def face_events():
         headers={
             "Cache-Control": "no-cache",
             "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
         },
     )
 

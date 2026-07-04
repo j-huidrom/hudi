@@ -14,6 +14,7 @@ class FaceManager:
 
     def update(self, state=None, message=None):
 
+        
         with self._lock:
 
             if state is not None:
@@ -26,6 +27,10 @@ class FaceManager:
                 "state": self.state,
                 "message": self.message,
             }
+
+            print(
+                f"[FACE] state={self.state}, listeners={len(self.listeners)}"
+            )
 
             dead = []
 
