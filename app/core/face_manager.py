@@ -53,20 +53,20 @@ class FaceManager:
                 "message": self.message,
             }
         
-def subscribe(self):
+    def subscribe(self):
 
-    q = Queue()
+        q = Queue()
 
-    self.listeners.append(q)
+        self.listeners.append(q)
 
-    return q
+        return q
 
 
-def unsubscribe(self, q):
+    def unsubscribe(self, q):
 
-    if q in self.listeners:
+        if q in self.listeners:
 
-        self.listeners.remove(q)        
+            self.listeners.remove(q)        
 
 
 face_manager = FaceManager()
