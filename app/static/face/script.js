@@ -5,6 +5,10 @@ const leftEye=document.getElementById("leftEye");
 const rightEye=document.getElementById("rightEye");
 const mouth=document.getElementById("mouth");
 
+const chat = document.getElementById("chat");
+
+let conversation = [];
+
 leftEye.style.animation="blink 6s infinite";
 rightEye.style.animation="blink 6s infinite";
 
@@ -19,15 +23,16 @@ function setState(state){
 
 function render(data){
 
-    document.getElementById("state").innerHTML =
-        data.state.toUpperCase();
-
-    document.getElementById("subtitle").innerHTML =
-        data.message;
-
-    console.log("STATE =", data.state);
+    state.innerHTML=data.state.toUpperCase();
 
     setState(data.state);
+
+    if(data.state==="speaking"){
+
+        addTypingMessage("hudi",data.message);
+
+    }
+
 }
 
 const source = new EventSource(
@@ -53,3 +58,67 @@ source.onerror = () => {
     console.log("HUDI Face disconnected...");
 
 };
+
+function addMessage(role,text){
+
+    conversation.push({
+
+        role,
+
+        text
+
+    });
+
+    renderConversation();
+
+}
+
+function renderConversation(){
+
+    chat.innerHTML="";
+
+    conversation.forEach(msg=>{
+
+        const bubble=document.createElement("div");
+
+        bubble.className="message "+msg.role;
+
+        bubble.innerHTML=msg.text;
+
+        chat.appendChild(bubble);
+
+    });
+
+    chat.scrollTop=chat.scrollHeight;
+
+}
+
+async function addTypingMessage(role,text){
+
+    conversation.push({
+
+        role,
+
+        text:""
+
+    });
+
+    renderConversation();
+
+    let current="";
+
+    const index=conversation.length-1;
+
+    for(const c of text){
+
+        current+=c;
+
+        conversation[index].text=current;
+
+        renderConversation();
+
+        await new Promise(r=>setTimeout(r,18));
+
+    }
+
+}
