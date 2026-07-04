@@ -1,25 +1,19 @@
-const emoji=document.getElementById("emoji");
 const state=document.getElementById("state");
 const subtitle=document.getElementById("subtitle");
-const leftEye=document.getElementById("leftEye");
-leftEye.style.animation="blink 6s infinite";
-rightEye.style.animation="blink 6s infinite";
 
+const leftEye=document.getElementById("leftEye");
 const rightEye=document.getElementById("rightEye");
 const mouth=document.getElementById("mouth");
 
-function setState(state){
+leftEye.style.animation="blink 6s infinite";
+rightEye.style.animation="blink 6s infinite";
 
+function setState(state){
     const face=document.getElementById("face");
 
-    face.classList.remove(
-        "ready",
-        "listening",
-        "thinking",
-        "speaking"
-    );
+    face.className="face "+state;
 
-    face.classList.add(state);
+    console.log(face.className);
 
 }
 
@@ -31,9 +25,9 @@ function render(data){
     document.getElementById("subtitle").innerHTML =
         data.message;
 
-    setState(data.state);
-    subtitle.innerHTML=data.message;
+    console.log("STATE =", data.state);
 
+    setState(data.state);
 }
 
 const source = new EventSource(
@@ -42,13 +36,17 @@ const source = new EventSource(
 
 source.onmessage = (event) => {
 
-    const data = JSON.parse(event.data);
+        console.log("===== HUDI EVENT =====");
 
-    render(data);
+        console.log(event.data);
 
-    setState(data.state);
+        const data = JSON.parse(event.data);
 
-};
+        console.log(data);
+
+        render(data);
+
+    }
 
 source.onerror = () => {
 
