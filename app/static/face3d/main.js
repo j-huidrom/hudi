@@ -1,10 +1,20 @@
 import * as THREE from "three";
 
 import {
+
+connectEvents,
+
+updateFace
+
+} from "./events.js";
+
+import {
     initScene,
     scene,
     render
 } from "./scene.js";
+
+connectEvents();
 
 import {
     createFace
@@ -29,6 +39,7 @@ function animate(){
         clock.getDelta();
 
     animateFace(delta);
+    updateFace(delta);
 
     render();
 
