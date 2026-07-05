@@ -2,7 +2,7 @@ import json
 
 from fastapi import FastAPI, Request
 from dotenv import load_dotenv
-from fastapi.responses import RedirectResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from app.core.face_manager import face_manager
 from pydantic import BaseModel
@@ -288,3 +288,10 @@ async def update_face_state(request: FaceStateRequest):
 async def get_face_state():
 
     return face_manager.get()
+
+@app.get("/face3d")
+async def face3d():
+
+    return FileResponse(
+        "app/static/face3d/index.html"
+    )
