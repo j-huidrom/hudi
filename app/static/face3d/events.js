@@ -1,4 +1,24 @@
-import { head, ring, leftEye, rightEye, mouth } from "./hudiface.js";
+import {
+
+head,
+
+ring,
+
+leftEye,
+
+rightEye,
+
+upperLip,
+
+lowerLip
+
+} from "./hudiface.js";
+
+let targetGap = 0;
+
+let currentGap = 0;
+
+let lastUpdate = 0;
 
 export let faceState = "ready";
 
@@ -179,24 +199,47 @@ export function updateFace(delta){
 
         *delta*4;
 
-    //----------------------------------
-    // ONLY mouth moves
-    //----------------------------------
+//----------------------------------
+// Natural Lip Animation
+//----------------------------------
 
-    mouth.scale.y +=
+if(faceState==="speaking"){
 
-        (
+    if(performance.now()-lastUpdate>140){
 
-            1+
+        targetGap=Math.random()*0.18;
 
-            face.mouthOpen*2
+        lastUpdate=performance.now();
 
-            -
+    }
 
-            mouth.scale.y
+}
+else{
 
-        )
+    targetGap=0;
 
-        *delta*10;
+}
+
+currentGap +=
+
+(targetGap-currentGap)
+
+*delta*5;
+
+
+
+upperLip.position.y =
+
+-0.40 +
+
+currentGap*0.5;
+
+
+
+lowerLip.position.y =
+
+-0.56 -
+
+currentGap*0.5;
 
 }

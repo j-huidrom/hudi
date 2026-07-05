@@ -4,7 +4,8 @@ export let head;
 export let ring;
 export let leftEye;
 export let rightEye;
-export let mouth;
+export let upperLip;
+export let lowerLip;
 
 export function createFace(scene) {
 
@@ -96,22 +97,17 @@ export function createFace(scene) {
     head.add(rightEye);
 
     //-------------------------------------------------------
-    // Mouth
+    // Upper Lip
     //-------------------------------------------------------
 
-    const mouthGeometry = new THREE.CapsuleGeometry(
-
-        0.05,
-
-        0.42,
-
-        8,
-
-        16
-
+    const lipGeometry = new THREE.CapsuleGeometry(
+        0.035,
+        0.34,
+        6,
+        12
     );
 
-    const mouthMaterial = new THREE.MeshStandardMaterial({
+    const lipMaterial = new THREE.MeshStandardMaterial({
 
         color:0xffd54d,
 
@@ -121,24 +117,56 @@ export function createFace(scene) {
 
         metalness:0,
 
-        roughness:0.15
+        roughness:.15
 
     });
 
-    mouth = new THREE.Mesh(
-        mouthGeometry,
-        mouthMaterial
+    upperLip = new THREE.Mesh(
+        lipGeometry,
+        lipMaterial
     );
 
-    mouth.rotation.z = Math.PI / 2;
+    upperLip.rotation.z = Math.PI/2;
 
-    mouth.position.set(
+    upperLip.position.set(
+
         0,
-        -0.48,
+
+        -0.40,
+
         0.05
+
     );
 
-    head.add(mouth);
+    head.add(upperLip);
+
+
+
+    //-------------------------------------------------------
+    // Lower Lip
+    //-------------------------------------------------------
+
+    lowerLip = new THREE.Mesh(
+
+        lipGeometry,
+
+        lipMaterial
+
+    );
+
+    lowerLip.rotation.z = Math.PI/2;
+
+    lowerLip.position.set(
+
+        0,
+
+        -0.56,
+
+        0.05
+
+    );
+
+    head.add(lowerLip);
 
     //-------------------------------------------------------
     // Face Position

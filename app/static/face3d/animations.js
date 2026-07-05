@@ -1,4 +1,18 @@
-import { head, ring, leftEye, rightEye, mouth } from "./hudiface.js";
+import {
+
+head,
+
+ring,
+
+leftEye,
+
+rightEye,
+
+upperLip,
+
+lowerLip
+
+} from "./hudiface.js";
 
 let clock = 0;
 
@@ -66,14 +80,6 @@ export function animateFace(delta) {
 
     rightEye.material.emissiveIntensity =
         eyeGlow;
-
-    //----------------------------------------
-    // Mouth breathing
-    //----------------------------------------
-
-    mouth.scale.x =
-        1 +
-        Math.sin(clock * 1.5) * 0.05;
 
     //----------------------------------------
     // Random blinking
