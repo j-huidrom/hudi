@@ -1,107 +1,111 @@
-import * as THREE from "three";
+import { head, ring, leftEye, rightEye, mouth } from "./hudiface.js";
 
-const scene = new THREE.Scene();
+let clock = 0;
 
-scene.background=new THREE.Color(0x060913);
+let blinkTimer = 0;
+let blinkDuration = 0;
 
-const camera=new THREE.PerspectiveCamera(
+let nextBlink =
+    2 + Math.random() * 4;
 
-45,
+export function animateFace(delta) {
 
-window.innerWidth/window.innerHeight,
+    clock += delta;
 
-0.1,
+    //----------------------------------------
+    // Floating
+    //----------------------------------------
 
-1000
+    head.position.y =
+        Math.sin(clock * 1.5) * 0.08;
 
-);
+    //----------------------------------------
+    // Gentle breathing
+    //----------------------------------------
 
-camera.position.z=5;
+    const breathe =
+        1 + Math.sin(clock * 1.5) * 0.015;
 
-const renderer=new THREE.WebGLRenderer({
+    head.scale.set(
+        breathe,
+        breathe,
+        breathe
+    );
 
-antialias:true
+    //----------------------------------------
+    // Head sway
+    //----------------------------------------
 
-});
+    head.rotation.z =
+        Math.sin(clock * 0.35) * 0.03;
 
-renderer.setSize(
+    head.rotation.x =
+        Math.sin(clock * 0.45) * 0.02;
 
-window.innerWidth,
+    //----------------------------------------
+    // Ring glow
+    //----------------------------------------
 
-window.innerHeight
+    const glow =
+        1.3 +
+        Math.sin(clock * 2.2) * 0.4;
 
-);
+    ring.material.emissiveIntensity =
+        glow;
 
-document
+    //----------------------------------------
+    // Eye glow
+    //----------------------------------------
 
-.getElementById("scene")
+    const eyeGlow =
+        3.2 +
+        Math.sin(clock * 3) * 0.7;
 
-.appendChild(renderer.domElement);
+    leftEye.material.emissiveIntensity =
+        eyeGlow;
 
+    rightEye.material.emissiveIntensity =
+        eyeGlow;
 
+    //----------------------------------------
+    // Mouth breathing
+    //----------------------------------------
 
-const geometry=new THREE.TorusGeometry(
+    mouth.scale.x =
+        1 +
+        Math.sin(clock * 1.5) * 0.05;
 
-1.2,
+    //----------------------------------------
+    // Random blinking
+    //----------------------------------------
 
-0.03,
+    blinkTimer += delta;
 
-32,
+    if(blinkDuration>0){
 
-200
+        blinkDuration-=delta;
 
-);
+        leftEye.scale.y=0.15;
+        rightEye.scale.y=0.15;
 
-const material=new THREE.MeshBasicMaterial({
+    }
+    else{
 
-color:0xffd34d
+        leftEye.scale.y=1;
+        rightEye.scale.y=1;
 
-});
+    }
 
-const ring=new THREE.Mesh(
+    if(blinkTimer>nextBlink){
 
-geometry,
+        blinkDuration=0.12;
 
-material
+        blinkTimer=0;
 
-);
+        nextBlink=
+            2+
+            Math.random()*5;
 
-scene.add(ring);
-
-
-
-function animate(){
-
-requestAnimationFrame(animate);
-
-renderer.render(scene,camera);
+    }
 
 }
-
-animate();
-
-
-
-window.addEventListener(
-
-"resize",
-
-()=>{
-
-camera.aspect=
-
-window.innerWidth/window.innerHeight;
-
-camera.updateProjectionMatrix();
-
-renderer.setSize(
-
-window.innerWidth,
-
-window.innerHeight
-
-);
-
-}
-
-);
