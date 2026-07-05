@@ -223,6 +223,12 @@ def root():
 
 app.mount("/face", StaticFiles(directory="app/static/face", html=True), name="face")
 
+app.mount(
+    "/face3d",
+    StaticFiles(directory="app/static/face3d", html=True),
+    name="face3d"
+)
+
 from pydantic import BaseModel
 
 class FaceStateRequest(BaseModel):
@@ -288,10 +294,3 @@ async def update_face_state(request: FaceStateRequest):
 async def get_face_state():
 
     return face_manager.get()
-
-@app.get("/face3d")
-async def face3d():
-
-    return FileResponse(
-        "app/static/face3d/index.html"
-    )
