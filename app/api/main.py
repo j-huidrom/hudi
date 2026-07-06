@@ -229,6 +229,12 @@ app.mount(
     name="face3d"
 )
 
+app.mount(
+    "/face3dearth",
+    StaticFiles(directory="app/static/face3dearth", html=True),
+    name="face3dearth"
+)
+
 from pydantic import BaseModel
 
 class FaceStateRequest(BaseModel):
