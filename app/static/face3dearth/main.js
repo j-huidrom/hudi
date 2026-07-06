@@ -1,47 +1,24 @@
-import * as THREE from "three";
-
 import {
 
-connectEvents,
-
-updateFace
-
-} from "./events.js";
-
-import {
     initScene,
-    scene,
-    render
-} from "./scene.js";
 
-connectEvents();
+    render,
 
-import {
-    createFace
-} from "./hudiface.js";
+    clock
 
-import {
-    animateFace
-} from "./animations.js";
+}
+from "./scene.js";
 
 initScene();
-
-createFace(scene);
-
-const clock =
-    new THREE.Clock();
 
 function animate(){
 
     requestAnimationFrame(animate);
 
-    const delta=
+    const delta =
         clock.getDelta();
 
-    animateFace(delta);
-    updateFace(delta);
-
-    render();
+    render(delta);
 
 }
 
