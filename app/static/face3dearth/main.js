@@ -1,25 +1,20 @@
-import {
-
-    initScene,
-
-    render,
-
-    clock
-
-}
-from "./scene.js";
+import { initScene, render, clock } from "./scene.js";
+import { initCore, updateCore } from "./core.js";
 
 initScene();
+initCore();
 
-function animate(){
+animate();
+
+function animate() {
 
     requestAnimationFrame(animate);
 
-    const delta =
-        clock.getDelta();
+    const delta = clock.getDelta();
+    const elapsed = clock.getElapsedTime();
 
-    render(delta);
+    updateCore(delta, elapsed);
+
+    render();
 
 }
-
-animate();

@@ -7,41 +7,35 @@ export let clock;
 
 export function initScene() {
 
-    //----------------------------------------------------
-    // Scene
-    //----------------------------------------------------
-
     scene = new THREE.Scene();
 
-    scene.background = new THREE.Color(0x02040d);
+    scene.background = new THREE.Color(0x01040c);
 
-    //----------------------------------------------------
+    //---------------------------------------
     // Camera
-    //----------------------------------------------------
+    //---------------------------------------
 
     camera = new THREE.PerspectiveCamera(
 
-        42,
+        38,
 
         window.innerWidth / window.innerHeight,
 
         0.1,
 
-        1000
+        100
 
     );
 
-    camera.position.set(0,0,7);
+    camera.position.set(0,0,6.8);
 
-    //----------------------------------------------------
+    //---------------------------------------
     // Renderer
-    //----------------------------------------------------
+    //---------------------------------------
 
     renderer = new THREE.WebGLRenderer({
 
-        antialias:true,
-
-        alpha:false
+        antialias:true
 
     });
 
@@ -61,75 +55,89 @@ export function initScene() {
     renderer.toneMapping =
         THREE.ACESFilmicToneMapping;
 
-    renderer.toneMappingExposure = 1.15;
+    renderer.toneMappingExposure = 1.25;
+
+    renderer.physicallyCorrectLights = true;
 
     document
         .getElementById("scene-container")
         .appendChild(renderer.domElement);
 
-    //----------------------------------------------------
-    // Lighting
-    //----------------------------------------------------
+    //---------------------------------------
+    // Clock
+    //---------------------------------------
 
-    const ambient =
+    clock = new THREE.Clock();
+
+    //---------------------------------------
+    // Ambient Light
+    //---------------------------------------
+
+    scene.add(
+
         new THREE.AmbientLight(
+
             0xffffff,
-            .35
-        );
 
-    scene.add(ambient);
+            0.25
 
-    //----------------------------------------------------
+        )
+
+    );
+
+    //---------------------------------------
+    // Sun Light
+    //---------------------------------------
 
     const sun =
         new THREE.DirectionalLight(
-            0x8bd6ff,
-            3.2
+
+            0xffffff,
+
+            8
+
         );
 
     sun.position.set(
 
-        4,
+        8,
 
-        2,
+        5,
 
-        5
+        8
 
     );
 
     scene.add(sun);
 
-    //----------------------------------------------------
+    //---------------------------------------
+    // Blue Fill Light
+    //---------------------------------------
 
-    const rim =
+    const fill =
         new THREE.PointLight(
 
-            0x3f8cff,
+            0x4da6ff,
 
-            18,
+            30,
 
-            30
+            50
 
         );
 
-    rim.position.set(
+    fill.position.set(
 
-        -5,
+        -6,
 
-        -1,
+        -4,
 
-        4
+        6
 
     );
 
-    scene.add(rim);
+    scene.add(fill);
 
-    //----------------------------------------------------
-
-    clock =
-        new THREE.Clock();
-
-    //----------------------------------------------------
+    //---------------------------------------
 
     window.addEventListener(
 

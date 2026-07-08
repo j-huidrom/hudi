@@ -1,89 +1,124 @@
-import * as THREE from "three";
+import * as THREE from "https://unpkg.com/three@0.179.1/build/three.module.js";
 
-export let scene;
-export let camera;
-export let renderer;
+import { scene } from "./scene.js";
 
-export function initScene() {
+export let earth;
+let clouds;
 
-    scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x060913);
+const loader = new THREE.TextureLoader();
 
-    camera = new THREE.PerspectiveCamera(
-        45,
-        window.innerWidth / window.innerHeight,
-        0.1,
-        100
+export function initCore() {
+
+    //----------------------------------------
+    // Load Textures
+    //----------------------------------------
+
+    const dayTexture = loader.load("assets/earth_day.jpg");
+    const normalTexture = loader.load("assets/earth_normal.jpg");
+    const cloudTexture = loader.load("assets/earth_clouds.jpg");
+
+    dayTexture.colorSpace = THREE.SRGBColorSpace;
+
+    //----------------------------------------
+    // Earth
+    //----------------------------------------
+
+    const earthGeometry = new THREE.SphereGeometry(
+
+        2,
+
+        128,
+
+        128
+
     );
 
-    camera.position.set(0, 0, 8);
+    const earthMaterial = new THREE.MeshStandardMaterial({
 
-    renderer = new THREE.WebGLRenderer({
-        antialias: true,
-        alpha: false
+        map: dayTexture,
+
+        normalMap: normalTexture,
+
+        normalScale: new THREE.Vector2(0.7,0.7),
+
+        metalness:0,
+
+        roughness:0.95
+
     });
 
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    earth = new THREE.Mesh(
 
-    const container = document.getElementById("scene");
-    container.innerHTML = "";
-    container.appendChild(renderer.domElement);
+        earthGeometry,
 
-    //---------------------------------------
-    // Lighting
-    //---------------------------------------
+        earthMaterial
 
-    const ambient = new THREE.AmbientLight(
-        0xffffff,
-        0.45
     );
 
-    scene.add(ambient);
+    scene.add(earth);
 
-    const keyLight = new THREE.PointLight(
-        0xffd54d,
-        10,
-        30
+    //----------------------------------------
+    // Clouds
+    //----------------------------------------
+
+    const cloudGeometry = new THREE.SphereGeometry(
+
+        2.02,
+
+        128,
+
+        128
+
     );
 
-    keyLight.position.set(0, 0, 6);
+    const cloudMaterial = new THREE.MeshPhongMaterial({
 
-    scene.add(keyLight);
+        map: cloudTexture,
 
-    const fillLight = new THREE.PointLight(
-        0x4466ff,
-        1.5,
-        25
+        transparent:true,
+
+        opacity:0.55,
+
+        depthWrite:false
+
+    });
+
+    clouds = new THREE.Mesh(
+
+        cloudGeometry,
+
+        cloudMaterial
+
     );
 
-    fillLight.position.set(-5, 4, 5);
-
-    scene.add(fillLight);
-
-    //---------------------------------------
-    // Resize
-    //---------------------------------------
-
-    window.addEventListener("resize", onResize);
+    scene.add(clouds);
 
 }
 
-function onResize() {
+export function updateCore(delta,time){
 
-    camera.aspect = window.innerWidth / window.innerHeight;
+    if(!earth) return;
 
-    camera.updateProjectionMatrix();
+    //----------------------------------------
+    // Earth Rotation
+    //----------------------------------------
 
-    renderer.setSize(
-        window.innerWidth,
-        window.innerHeight
-    );
+    earth.rotation.y += delta * 0.10;
 
-}
+    //----------------------------------------
+    // Clouds rotate slightly faster
+    //----------------------------------------
 
-export function render() {
+    clouds.rotation.y += delta * 0.13;
 
-    renderer.render(scene, camera);
+    //----------------------------------------
+    // Floating Animation
+    //----------------------------------------
+
+    const offset = Math.sin(time*0.6)*0.08;
+
+    earth.position.y = offset;
+
+    clouds.position.y = offset;
 
 }
