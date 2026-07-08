@@ -2,11 +2,12 @@ import * as THREE from "https://unpkg.com/three@0.179.1/build/three.module.js";
 
 import { scene } from "./scene.js";
 
-import { getState, HUDI_STATE} from "./state.js";
+import { updateVisualState, getVisualState } from "./visualstate.js";
 
 export let earth;
 let clouds;
 let atmosphere;
+let fillLight;
 
 const loader = new THREE.TextureLoader();
 
@@ -136,7 +137,21 @@ export function initCore(){
 
     );
 
-    scene.add(clouds);    
+    scene.add(clouds);
+
+    //------------------------------------------------
+    // Blue Fill Light
+    //------------------------------------------------
+
+    fillLight = new THREE.PointLight(
+        0x66ccff,
+        30,
+        25
+    );
+
+    fillLight.position.set(0,0,6);
+
+    scene.add(fillLight);
 
 }
 
@@ -146,45 +161,25 @@ export function initCore(){
 
 export function updateCore(delta,time){
 
-    //------------------------------------------------
-    // Rotation
-    //------------------------------------------------
+        //------------------------------------------------
+        // Visual State
+        //------------------------------------------------
 
-    if(coreState.rotationEnabled){
+        updateVisualState(delta);
 
-        const state = getState();
-        let rotationSpeed = 0.10;
+        const visual = getVisualState();
 
-        switch(state){
+        if(coreState.rotationEnabled){
 
-            case HUDI_STATE.LISTENING:
+            earth.rotation.y +=
+                delta * visual.rotationSpeed;
 
-                rotationSpeed = 0.05;
-                break;
-
-            case HUDI_STATE.THINKING:
-
-                rotationSpeed = 0.02;
-                break;
-
-            case HUDI_STATE.SPEAKING:
-
-                rotationSpeed = 0.14;
-                break;
-
-            case HUDI_STATE.GOODBYE:
-
-                rotationSpeed = 0.04;
-                break;
+            clouds.rotation.y +=
+                delta * (visual.rotationSpeed * 1.25);
 
         }
 
-        earth.rotation.y +=
-        delta * rotationSpeed;
 
-        clouds.rotation.y += delta*0.13;
-
-    }
 
     //------------------------------------------------
     // Floating
@@ -197,6 +192,23 @@ export function updateCore(delta,time){
     earth.position.y = floatOffset;
 
     clouds.position.y = floatOffset;
+
+    //------------------------------------------------
+    // Cloud Animation
+    //------------------------------------------------
+
+    clouds.material.opacity =
+        visual.cloudOpacity;
+
+    clouds.material.color.setRGB(
+
+        visual.cloudTint,
+
+        visual.cloudTint,
+
+        1.0
+
+    );
   
 
     //------------------------------------------------
@@ -217,7 +229,26 @@ export function updateCore(delta,time){
 
         1 +
 
-        pulse*0.012;
+        pulse * 0.012 * visual.glow;
 
+    earth.scale.setScalar(scale);
+
+    clouds.scale.setScalar(
+
+        scale + 0.01
+
+    );
+
+    fillLight.intensity =
+
+        visual.fillIntensity;
+
+    fillLight.position.copy(
+
+        earth.position
+
+    );
+
+    fillLight.position.z += 6;
     
 }
