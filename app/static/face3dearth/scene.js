@@ -6,7 +6,7 @@ export let renderer;
 export let clock;
 
 const EARTH_RADIUS = 2.0;
-const EARTH_FILL = 0.50;      // 90% of viewport
+const EARTH_FILL = 0.90;      // 90% of viewport
 
 export function initScene() {
 

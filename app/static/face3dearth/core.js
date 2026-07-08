@@ -2,6 +2,8 @@ import * as THREE from "https://unpkg.com/three@0.179.1/build/three.module.js";
 
 import { scene } from "./scene.js";
 
+import { getState, HUDI_STATE} from "./state.js";
+
 export let earth;
 let clouds;
 let atmosphere;
@@ -150,7 +152,35 @@ export function updateCore(delta,time){
 
     if(coreState.rotationEnabled){
 
-        earth.rotation.y += delta*0.10;
+        const state = getState();
+        let rotationSpeed = 0.10;
+
+        switch(state){
+
+            case HUDI_STATE.LISTENING:
+
+                rotationSpeed = 0.05;
+                break;
+
+            case HUDI_STATE.THINKING:
+
+                rotationSpeed = 0.02;
+                break;
+
+            case HUDI_STATE.SPEAKING:
+
+                rotationSpeed = 0.14;
+                break;
+
+            case HUDI_STATE.GOODBYE:
+
+                rotationSpeed = 0.04;
+                break;
+
+        }
+
+        earth.rotation.y +=
+        delta * rotationSpeed;
 
         clouds.rotation.y += delta*0.13;
 

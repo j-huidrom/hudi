@@ -1,182 +1,91 @@
-import {
+/*
+==========================================================
+HUDI State Engine
+==========================================================
+*/
 
-    setRotation,
-    setGlow,
-    setPulseSpeed,
-    setAtmosphereColor
+export const HUDI_STATE = {
 
-} from "./core.js";
+    BOOT: "boot",
 
-export let hudiState = "ready";
+    READY: "ready",
 
-let previousState = "";
+    LISTENING: "listening",
 
+    THINKING: "thinking",
 
-//--------------------------------------------
+    SPEAKING: "speaking",
 
-export function setState(state){
+    GOODBYE: "goodbye"
 
-    hudiState = state.toLowerCase();
+};
 
-}
+let currentState = HUDI_STATE.READY;
 
+const listeners = [];
 
-//--------------------------------------------
+/*
+==========================================================
+Current State
+==========================================================
+*/
 
-export function connectKeyboard(){
+export function getState() {
 
-    window.addEventListener(
-
-        "keydown",
-
-        (e)=>{
-
-            switch(e.key){
-
-                case "1":
-                    setState("ready");
-                    break;
-
-                case "2":
-                    setState("listening");
-                    break;
-
-                case "3":
-                    setState("thinking");
-                    break;
-
-                case "4":
-                    setState("speaking");
-                    break;
-
-                case "5":
-                    setState("goodbye");
-                    break;
-
-            }
-
-        }
-
-    );
+    return currentState;
 
 }
 
+/*
+==========================================================
+Change State
+==========================================================
+*/
 
-//--------------------------------------------
+export function setState(state) {
 
-export function connectEvents(){
-
-    const source = new EventSource(
-
-        "https://api.huidrom.com/api/face/events"
-
-    );
-
-    source.onmessage = (event)=>{
-
-        const data = JSON.parse(event.data);
-
-        console.log("HUDI",data.state);
-
-        setState(data.state);
-
-    };
-
-    source.onerror=()=>{
-
-        console.log("HUDI disconnected");
-
-    };
-
-}
-
-
-//--------------------------------------------
-
-export function updateState(){
-
-    if(previousState===hudiState){
-
+    if (state === currentState)
         return;
 
-    }
+    currentState = state;
 
-    previousState=hudiState;
+    console.log(
+        "[HUDI] State ->",
+        state
+    );
 
-    console.log("State:",hudiState);
+    listeners.forEach(
 
-    switch(hudiState){
+        listener => listener(state)
 
-        //------------------------------------
-
-        case "ready":
-
-            setRotation(true);
-
-            setGlow(.22);
-
-            setPulseSpeed(.60);
-
-            setAtmosphereColor(0x4da6ff);
-
-            break;
-
-        //------------------------------------
-
-        case "listening":
-
-            setRotation(false);
-
-            setGlow(.34);
-
-            setPulseSpeed(1.4);
-
-            setAtmosphereColor(0x74c8ff);
-
-            break;
-
-        //------------------------------------
-
-        case "thinking":
-
-            setRotation(false);
-
-            setGlow(.42);
-
-            setPulseSpeed(.45);
-
-            setAtmosphereColor(0x6f8cff);
-
-            break;
-
-        //------------------------------------
-
-        case "speaking":
-
-            setRotation(false);
-
-            setGlow(.55);
-
-            setPulseSpeed(3.2);
-
-            setAtmosphereColor(0x39b8ff);
-
-            break;
-
-        //------------------------------------
-
-        case "goodbye":
-
-            setRotation(false);
-
-            setGlow(.08);
-
-            setPulseSpeed(.25);
-
-            setAtmosphereColor(0x2d5cff);
-
-            break;
-
-    }
+    );
 
 }
+
+/*
+==========================================================
+Subscribe
+==========================================================
+*/
+
+export function onStateChanged(callback){
+
+    listeners.push(callback);
+
+}
+
+/*
+==========================================================
+Developer Console
+==========================================================
+*/
+
+window.HUDI = {
+
+    setState,
+
+    getState,
+
+    states: HUDI_STATE
+
+};
