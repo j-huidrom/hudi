@@ -1,79 +1,64 @@
-import * as THREE from "three";
+import * as THREE from "https://unpkg.com/three@0.165.0/build/three.module.js";
 
-export let scene;
-export let camera;
-export let renderer;
+export const renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    alpha: true
+});
 
-export function initScene() {
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-    scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x060913);
+document.body.appendChild(renderer.domElement);
 
-    camera = new THREE.PerspectiveCamera(
-        45,
-        window.innerWidth / window.innerHeight,
-        0.1,
-        100
-    );
+/*
+|--------------------------------------------------------------------------
+| Camera
+|--------------------------------------------------------------------------
+*/
 
-    camera.position.set(0, 0, 8);
+export const camera = new THREE.PerspectiveCamera(
+    35,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    100
+);
 
-    renderer = new THREE.WebGLRenderer({
-        antialias: true,
-        alpha: false
-    });
+/*
+|--------------------------------------------------------------------------
+| Intelligent Earth Fitting
+|--------------------------------------------------------------------------
+*/
 
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
+const EARTH_RADIUS = 2.0;
 
-    const container = document.getElementById("scene");
-    container.innerHTML = "";
-    container.appendChild(renderer.domElement);
+/**
+ * Automatically positions the camera so the
+ * complete Earth is visible on every screen.
+ */
+export function fitEarthToViewport() {
 
-    //---------------------------------------
-    // Lighting
-    //---------------------------------------
+    const aspect = window.innerWidth / window.innerHeight;
 
-    const ambient = new THREE.AmbientLight(
-        0xffffff,
-        0.45
-    );
-
-    scene.add(ambient);
-
-    const keyLight = new THREE.PointLight(
-        0xffd54d,
-        10,
-        30
-    );
-
-    keyLight.position.set(0, 0, 6);
-
-    scene.add(keyLight);
-
-    const fillLight = new THREE.PointLight(
-        0x4466ff,
-        1.5,
-        25
-    );
-
-    fillLight.position.set(-5, 4, 5);
-
-    scene.add(fillLight);
-
-    //---------------------------------------
-    // Resize
-    //---------------------------------------
-
-    window.addEventListener("resize", onResize);
-
-}
-
-function onResize() {
-
-    camera.aspect = window.innerWidth / window.innerHeight;
-
+    camera.aspect = aspect;
     camera.updateProjectionMatrix();
+
+    const fov = THREE.MathUtils.degToRad(camera.fov);
+
+    /*
+     * 0.92 means Earth occupies roughly 92%
+     * of the smallest screen dimension.
+     *
+     * Lower value = smaller Earth
+     * Higher value = larger Earth
+     */
+    const fill = 0.92;
+
+    const distance =
+        (EARTH_RADIUS / fill) /
+        Math.tan(fov / 2);
+
+    camera.position.set(0, 0, distance);
 
     renderer.setSize(
         window.innerWidth,
@@ -82,8 +67,6 @@ function onResize() {
 
 }
 
-export function render() {
+window.addEventListener("resize", fitEarthToViewport);
 
-    renderer.render(scene, camera);
-
-}
+fitEarthToViewport();

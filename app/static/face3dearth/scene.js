@@ -5,6 +5,9 @@ export let camera;
 export let renderer;
 export let clock;
 
+const EARTH_RADIUS = 2.0;
+const EARTH_FILL = 0.90;      // 90% of viewport
+
 export function initScene() {
 
     scene = new THREE.Scene();
@@ -27,7 +30,7 @@ export function initScene() {
 
     );
 
-    camera.position.set(0,0,6.8);
+    fitEarthToViewport();
 
     //---------------------------------------
     // Renderer
@@ -149,13 +152,45 @@ export function initScene() {
 
 }
 
-function onResize(){
+function fitEarthToViewport() {
 
-    camera.aspect =
+    const aspect =
         window.innerWidth /
         window.innerHeight;
 
+    camera.aspect = aspect;
+
     camera.updateProjectionMatrix();
+
+    /*
+     * Fit using the smallest screen dimension.
+     * This guarantees the complete Earth stays visible.
+     */
+
+    const fov =
+        THREE.MathUtils.degToRad(
+            camera.fov
+        );
+
+    const distance =
+
+        (EARTH_RADIUS / EARTH_FILL) /
+
+        Math.tan(fov / 2);
+
+    camera.position.set(
+
+        0,
+
+        0,
+
+        distance
+
+    );
+
+}
+
+function onResize(){
 
     renderer.setSize(
 
@@ -164,6 +199,8 @@ function onResize(){
         window.innerHeight
 
     );
+
+    fitEarthToViewport();
 
 }
 
