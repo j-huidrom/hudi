@@ -134,41 +134,7 @@ export function initCore(){
 
     );
 
-    scene.add(clouds);
-
-    //------------------------------------------------
-    // Atmosphere
-    //------------------------------------------------
-
-    atmosphere = new THREE.Mesh(
-
-        new THREE.SphereGeometry(
-
-            2.08,
-
-            128,
-
-            128
-
-        ),
-
-        new THREE.MeshBasicMaterial({
-
-            color:0x4da6ff,
-
-            transparent:true,
-
-            opacity:.18,
-
-            blending:THREE.AdditiveBlending,
-
-            side:THREE.BackSide
-
-        })
-
-    );
-
-    scene.add(atmosphere);
+    scene.add(clouds);    
 
 }
 
