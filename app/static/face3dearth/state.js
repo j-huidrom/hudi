@@ -1,54 +1,82 @@
 import {
 
-head,
+    setRotation,
+    setGlow,
+    setPulseSpeed,
+    setAtmosphereColor
 
-ring,
+} from "./core.js";
 
-leftEye,
+export let hudiState = "ready";
 
-rightEye,
+let previousState = "";
 
-upperLip,
 
-lowerLip
+//--------------------------------------------
 
-} from "./hudiface.js";
+export function setState(state){
 
-let targetGap = 0;
+    hudiState = state.toLowerCase();
 
-let currentGap = 0;
+}
 
-let lastUpdate = 0;
 
-export let faceState = "ready";
+//--------------------------------------------
 
-export const face = {
+export function connectKeyboard(){
 
-    mouthOpen:0,
+    window.addEventListener(
 
-    glow:1.2,
+        "keydown",
 
-    eyeGlow:3,
+        (e)=>{
 
-    ringScale:1,
+            switch(e.key){
 
-    headTilt:0,
+                case "1":
+                    setState("ready");
+                    break;
 
-    eyeOffset:0
+                case "2":
+                    setState("listening");
+                    break;
 
-};
+                case "3":
+                    setState("thinking");
+                    break;
+
+                case "4":
+                    setState("speaking");
+                    break;
+
+                case "5":
+                    setState("goodbye");
+                    break;
+
+            }
+
+        }
+
+    );
+
+}
+
+
+//--------------------------------------------
 
 export function connectEvents(){
 
     const source = new EventSource(
+
         "https://api.huidrom.com/api/face/events"
+
     );
 
     source.onmessage = (event)=>{
 
         const data = JSON.parse(event.data);
 
-        console.log(data);
+        console.log("HUDI",data.state);
 
         setState(data.state);
 
@@ -62,184 +90,93 @@ export function connectEvents(){
 
 }
 
-function setState(state){
 
-    faceState=state.toLowerCase();
+//--------------------------------------------
 
-}
+export function updateState(){
 
-export function updateFace(delta){
+    if(previousState===hudiState){
 
-    switch(faceState){
+        return;
+
+    }
+
+    previousState=hudiState;
+
+    console.log("State:",hudiState);
+
+    switch(hudiState){
+
+        //------------------------------------
 
         case "ready":
 
-            face.mouthOpen=0;
+            setRotation(true);
 
-            face.glow=1.4;
+            setGlow(.22);
 
-            face.eyeGlow=3.2;
+            setPulseSpeed(.60);
 
-            face.ringScale=1;
-
-            face.headTilt=0;
-
-            face.eyeOffset=0;
+            setAtmosphereColor(0x4da6ff);
 
             break;
+
+        //------------------------------------
 
         case "listening":
 
-            face.mouthOpen=0;
+            setRotation(false);
 
-            face.glow=2.5;
+            setGlow(.34);
 
-            face.eyeGlow=5;
+            setPulseSpeed(1.4);
 
-            face.ringScale=1.05;
-
-            face.headTilt=0;
-
-            face.eyeOffset=0;
+            setAtmosphereColor(0x74c8ff);
 
             break;
+
+        //------------------------------------
 
         case "thinking":
 
-            face.mouthOpen=0;
+            setRotation(false);
 
-            face.glow=1.8;
+            setGlow(.42);
 
-            face.eyeGlow=4;
+            setPulseSpeed(.45);
 
-            face.ringScale=1.02;
-
-            face.headTilt=.12;
-
-            face.eyeOffset=.08;
+            setAtmosphereColor(0x6f8cff);
 
             break;
+
+        //------------------------------------
 
         case "speaking":
 
-            face.glow=2;
+            setRotation(false);
 
-            face.eyeGlow=4;
+            setGlow(.55);
 
-            face.ringScale=1.02;
+            setPulseSpeed(3.2);
 
-            face.headTilt=0;
+            setAtmosphereColor(0x39b8ff);
 
-            face.eyeOffset=0;
+            break;
 
-            face.mouthOpen=
-                Math.abs(
-                    Math.sin(
-                        performance.now()*0.02
-                    )
-                );
+        //------------------------------------
+
+        case "goodbye":
+
+            setRotation(false);
+
+            setGlow(.08);
+
+            setPulseSpeed(.25);
+
+            setAtmosphereColor(0x2d5cff);
 
             break;
 
     }
-
-    //----------------------------------
-    // Smooth interpolation
-    //----------------------------------
-
-    ring.scale.lerp(
-
-        {
-
-            x:face.ringScale,
-
-            y:face.ringScale,
-
-            z:1
-
-        },
-
-        delta*4
-
-    );
-
-    ring.material.emissiveIntensity +=
-
-        (face.glow-ring.material.emissiveIntensity)
-
-        *delta*5;
-
-    leftEye.material.emissiveIntensity +=
-
-        (face.eyeGlow-leftEye.material.emissiveIntensity)
-
-        *delta*5;
-
-    rightEye.material.emissiveIntensity +=
-
-        (face.eyeGlow-rightEye.material.emissiveIntensity)
-
-        *delta*5;
-
-    head.rotation.z +=
-
-        (face.headTilt-head.rotation.z)
-
-        *delta*4;
-
-    leftEye.position.x +=
-
-        ((-0.45-face.eyeOffset)-leftEye.position.x)
-
-        *delta*4;
-
-    rightEye.position.x +=
-
-        ((0.45-face.eyeOffset)-rightEye.position.x)
-
-        *delta*4;
-
-//----------------------------------
-// Natural Lip Animation
-//----------------------------------
-
-if(faceState==="speaking"){
-
-    if(performance.now()-lastUpdate>140){
-
-        targetGap=Math.random()*0.18;
-
-        lastUpdate=performance.now();
-
-    }
-
-}
-else{
-
-    targetGap=0;
-
-}
-
-currentGap +=
-
-(targetGap-currentGap)
-
-*delta*5;
-
-
-
-upperLip.position.y =
-
--0.40 +
-
-currentGap*0.5;
-
-
-
-lowerLip.position.y =
-
--0.56 -
-
-currentGap*0.5;
 
 }

@@ -4,121 +4,250 @@ import { scene } from "./scene.js";
 
 export let earth;
 let clouds;
+let atmosphere;
 
 const loader = new THREE.TextureLoader();
 
-export function initCore() {
 
-    //----------------------------------------
-    // Load Textures
-    //----------------------------------------
+//--------------------------------------------------
+// Public State
+//--------------------------------------------------
 
-    const dayTexture = loader.load("assets/earth_day.jpg");
-    const normalTexture = loader.load("assets/earth_normal.jpg");
-    const cloudTexture = loader.load("assets/earth_clouds.jpg");
+export const coreState = {
 
-    dayTexture.colorSpace = THREE.SRGBColorSpace;
+    rotationEnabled:true,
 
-    //----------------------------------------
+    glowIntensity:0.35,
+
+    pulseSpeed:1.0,
+
+    atmosphereColor:new THREE.Color(0x4da6ff)
+
+};
+
+
+//--------------------------------------------------
+
+export function setRotation(enabled){
+
+    coreState.rotationEnabled = enabled;
+
+}
+
+export function setGlow(value){
+
+    coreState.glowIntensity = value;
+
+}
+
+export function setPulseSpeed(value){
+
+    coreState.pulseSpeed = value;
+
+}
+
+export function setAtmosphereColor(hex){
+
+    coreState.atmosphereColor.set(hex);
+
+}
+
+
+
+//--------------------------------------------------
+
+export function initCore(){
+
+    const dayTexture =
+        loader.load("assets/earth_day.jpg");
+
+    const normalTexture =
+        loader.load("assets/earth_normal.jpg");
+
+    const cloudTexture =
+        loader.load("assets/earth_clouds.jpg");
+
+    dayTexture.colorSpace =
+        THREE.SRGBColorSpace;
+
+    //------------------------------------------------
     // Earth
-    //----------------------------------------
-
-    const earthGeometry = new THREE.SphereGeometry(
-
-        2,
-
-        128,
-
-        128
-
-    );
-
-    const earthMaterial = new THREE.MeshStandardMaterial({
-
-        map: dayTexture,
-
-        normalMap: normalTexture,
-
-        normalScale: new THREE.Vector2(0.7,0.7),
-
-        metalness:0,
-
-        roughness:0.95
-
-    });
+    //------------------------------------------------
 
     earth = new THREE.Mesh(
 
-        earthGeometry,
+        new THREE.SphereGeometry(
 
-        earthMaterial
+            2,
+
+            128,
+
+            128
+
+        ),
+
+        new THREE.MeshStandardMaterial({
+
+            map:dayTexture,
+
+            normalMap:normalTexture,
+
+            normalScale:new THREE.Vector2(.7,.7),
+
+            metalness:0,
+
+            roughness:.95
+
+        })
 
     );
 
     scene.add(earth);
 
-    //----------------------------------------
+    //------------------------------------------------
     // Clouds
-    //----------------------------------------
-
-    const cloudGeometry = new THREE.SphereGeometry(
-
-        2.02,
-
-        128,
-
-        128
-
-    );
-
-    const cloudMaterial = new THREE.MeshPhongMaterial({
-
-        map: cloudTexture,
-
-        transparent:true,
-
-        opacity:0.55,
-
-        depthWrite:false
-
-    });
+    //------------------------------------------------
 
     clouds = new THREE.Mesh(
 
-        cloudGeometry,
+        new THREE.SphereGeometry(
 
-        cloudMaterial
+            2.02,
+
+            128,
+
+            128
+
+        ),
+
+        new THREE.MeshPhongMaterial({
+
+            map:cloudTexture,
+
+            transparent:true,
+
+            opacity:.28,
+
+            depthWrite:false
+
+        })
 
     );
 
     scene.add(clouds);
 
+    //------------------------------------------------
+    // Atmosphere
+    //------------------------------------------------
+
+    atmosphere = new THREE.Mesh(
+
+        new THREE.SphereGeometry(
+
+            2.08,
+
+            128,
+
+            128
+
+        ),
+
+        new THREE.MeshBasicMaterial({
+
+            color:0x4da6ff,
+
+            transparent:true,
+
+            opacity:.18,
+
+            blending:THREE.AdditiveBlending,
+
+            side:THREE.BackSide
+
+        })
+
+    );
+
+    scene.add(atmosphere);
+
 }
+
+
+
+//--------------------------------------------------
 
 export function updateCore(delta,time){
 
-    if(!earth) return;
+    //------------------------------------------------
+    // Rotation
+    //------------------------------------------------
 
-    //----------------------------------------
-    // Earth Rotation
-    //----------------------------------------
+    if(coreState.rotationEnabled){
 
-    earth.rotation.y += delta * 0.10;
+        earth.rotation.y += delta*0.10;
 
-    //----------------------------------------
-    // Clouds rotate slightly faster
-    //----------------------------------------
+        clouds.rotation.y += delta*0.13;
 
-    clouds.rotation.y += delta * 0.13;
+        atmosphere.rotation.y += delta*0.08;
 
-    //----------------------------------------
-    // Floating Animation
-    //----------------------------------------
+    }
 
-    const offset = Math.sin(time*0.6)*0.08;
+    //------------------------------------------------
+    // Floating
+    //------------------------------------------------
 
-    earth.position.y = offset;
+    const floatOffset =
 
-    clouds.position.y = offset;
+        Math.sin(time*.55)*0.06;
+
+    earth.position.y = floatOffset;
+
+    clouds.position.y = floatOffset;
+
+    atmosphere.position.y = floatOffset;
+
+    //------------------------------------------------
+    // Breathing Atmosphere
+    //------------------------------------------------
+
+    const pulse =
+
+        Math.sin(
+
+            time *
+
+            coreState.pulseSpeed
+
+        )*0.5+0.5;
+
+    const scale =
+
+        1 +
+
+        pulse*0.012;
+
+    atmosphere.scale.set(
+
+        scale,
+
+        scale,
+
+        scale
+
+    );
+
+    atmosphere.material.opacity =
+
+        coreState.glowIntensity +
+
+        pulse*0.08;
+
+    atmosphere.material.color.lerp(
+
+        coreState.atmosphereColor,
+
+        delta*3
+
+    );
 
 }
