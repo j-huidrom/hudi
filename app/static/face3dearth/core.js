@@ -154,8 +154,6 @@ export function updateCore(delta,time){
 
         clouds.rotation.y += delta*0.13;
 
-        atmosphere.rotation.y += delta*0.08;
-
     }
 
     //------------------------------------------------
@@ -169,8 +167,7 @@ export function updateCore(delta,time){
     earth.position.y = floatOffset;
 
     clouds.position.y = floatOffset;
-
-    atmosphere.position.y = floatOffset;
+  
 
     //------------------------------------------------
     // Breathing Atmosphere
@@ -192,28 +189,5 @@ export function updateCore(delta,time){
 
         pulse*0.012;
 
-    atmosphere.scale.set(
-
-        scale,
-
-        scale,
-
-        scale
-
-    );
-
-    atmosphere.material.opacity =
-
-        coreState.glowIntensity +
-
-        pulse*0.08;
-
-    atmosphere.material.color.lerp(
-
-        coreState.atmosphereColor,
-
-        delta*3
-
-    );
-
+    
 }
