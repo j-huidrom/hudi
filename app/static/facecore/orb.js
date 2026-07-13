@@ -68,8 +68,12 @@ export function updateOrb(delta) {
 
     if (!orb) return;
 
-    orb.rotation.y += delta * 0.12;
+    orb.rotation.y += delta * 1.5;
 
-    orb.rotation.x += delta * 0.015;
+    orb.rotation.x += delta * 0.4;
+
+    const s = 1 + Math.sin(Date.now() * 0.003) * 0.08;
+
+    orb.scale.set(s, s, s);
 
 }
