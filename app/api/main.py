@@ -235,6 +235,12 @@ app.mount(
     name="face3dearth"
 )
 
+app.mount(
+    "/facecore",
+    StaticFiles(directory="app/static/facecore", html=True),
+    name="facecore"
+)
+
 from pydantic import BaseModel
 
 class FaceStateRequest(BaseModel):
