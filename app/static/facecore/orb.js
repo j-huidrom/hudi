@@ -1,44 +1,75 @@
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.164/build/three.module.js";
+import * as THREE from "https://unpkg.com/three@0.165.0/build/three.module.js";
+
+/* ==========================================================
+   HUDI Glass Orb
+========================================================== */
 
 export let orb;
 
 export function createOrb(scene) {
 
     const geometry = new THREE.SphereGeometry(
-        1,
+
+        1.0,
+
         128,
+
         128
+
     );
 
     const material = new THREE.MeshPhysicalMaterial({
 
-        color: 0x5dbdff,
+        color: 0x5abfff,
 
         transmission: 0.98,
 
         transparent: true,
 
-        opacity: 1,
+        opacity: 1.0,
 
-        roughness: 0.05,
+        roughness: 0.03,
 
-        metalness: 0,
+        metalness: 0.0,
 
-        clearcoat: 1,
+        clearcoat: 1.0,
 
-        clearcoatRoughness: 0,
+        clearcoatRoughness: 0.0,
 
-        ior: 1.4,
+        thickness: 0.8,
 
-        thickness: 0.8
+        ior: 1.45,
+
+        reflectivity: 1.0
 
     });
 
     orb = new THREE.Mesh(
+
         geometry,
+
         material
+
     );
 
+    orb.castShadow = false;
+
+    orb.receiveShadow = false;
+
     scene.add(orb);
+
+}
+
+/* ==========================================================
+   Idle Animation
+========================================================== */
+
+export function updateOrb(delta) {
+
+    if (!orb) return;
+
+    orb.rotation.y += delta * 0.12;
+
+    orb.rotation.x += delta * 0.015;
 
 }

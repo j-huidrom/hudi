@@ -1,19 +1,104 @@
-html,
-body {
+/* ==========================================================
+   HUDI FaceCore
+   Global Styles
+========================================================== */
 
-    margin:0;
-    width:100%;
-    height:100%;
+* {
 
-    overflow:hidden;
+    margin: 0;
+    padding: 0;
 
-    background:#05070d;
+    box-sizing: border-box;
 
 }
 
-#scene-container{
+html,
+body {
 
-    width:100vw;
-    height:100vh;
+    width: 100%;
+    height: 100%;
+
+    overflow: hidden;
+
+    background: radial-gradient(
+        circle at center,
+        #08131d 0%,
+        #05070d 45%,
+        #000000 100%
+    );
+
+    font-family:
+        Inter,
+        Arial,
+        sans-serif;
+
+}
+
+/* ==========================================================
+   Scene Container
+========================================================== */
+
+#scene-container {
+
+    position: fixed;
+
+    inset: 0;
+
+    width: 100vw;
+    height: 100vh;
+
+    overflow: hidden;
+
+}
+
+/* ==========================================================
+   Three.js Canvas
+========================================================== */
+
+canvas {
+
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+}
+
+/* ==========================================================
+   Prevent text selection
+========================================================== */
+
+body {
+
+    user-select: none;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+
+}
+
+/* ==========================================================
+   Loading Fade
+========================================================== */
+
+body {
+
+    animation: fadeIn 0.8s ease;
+
+}
+
+@keyframes fadeIn {
+
+    from {
+
+        opacity: 0;
+
+    }
+
+    to {
+
+        opacity: 1;
+
+    }
 
 }

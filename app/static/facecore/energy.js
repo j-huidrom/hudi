@@ -1,15 +1,27 @@
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.164/build/three.module.js";
+import * as THREE from "https://unpkg.com/three@0.165.0/build/three.module.js";
+
+/* ==========================================================
+   HUDI Energy Core
+========================================================== */
 
 export let energyCore;
 
 let elapsed = 0;
 
+/* ==========================================================
+   Create
+========================================================== */
+
 export function createEnergyCore(scene) {
 
     const geometry = new THREE.SphereGeometry(
+
         0.72,
+
         128,
+
         128
+
     );
 
     const material = new THREE.MeshPhysicalMaterial({
@@ -17,31 +29,40 @@ export function createEnergyCore(scene) {
         color: 0x33bbff,
 
         emissive: 0x1188ff,
-        emissiveIntensity: 2.0,
+
+        emissiveIntensity: 2.4,
 
         transparent: true,
+
         opacity: 0.82,
 
-        transmission: 0.9,
+        transmission: 0.92,
 
-        roughness: 0.15,
+        roughness: 0.12,
 
-        metalness: 0,
+        metalness: 0.0,
 
-        clearcoat: 1,
+        clearcoat: 1.0,
 
-        clearcoatRoughness: 0
+        clearcoatRoughness: 0.0
 
     });
 
     energyCore = new THREE.Mesh(
+
         geometry,
+
         material
+
     );
 
     scene.add(energyCore);
 
 }
+
+/* ==========================================================
+   Animation
+========================================================== */
 
 export function updateEnergy(delta) {
 
@@ -49,41 +70,58 @@ export function updateEnergy(delta) {
 
     elapsed += delta;
 
-    //------------------------------------------------
-    // Gentle breathing
-    //------------------------------------------------
+    //------------------------------------------
+    // Breathing
+    //------------------------------------------
 
-    const scale =
-        1.0 +
-        Math.sin(elapsed * 1.4) * 0.035;
+    const breathe =
 
-    energyCore.scale.setScalar(scale);
+        1 +
 
-    //------------------------------------------------
-    // Slow floating
-    //------------------------------------------------
+        Math.sin(elapsed * 1.4) * 0.04;
+
+    energyCore.scale.set(
+
+        breathe,
+
+        breathe,
+
+        breathe
+
+    );
+
+    //------------------------------------------
+    // Floating
+    //------------------------------------------
 
     energyCore.position.y =
-        Math.sin(elapsed * 0.6) * 0.03;
 
-    //------------------------------------------------
-    // Slow rotation
-    //------------------------------------------------
+        Math.sin(elapsed * 0.7) * 0.03;
 
-    energyCore.rotation.y += delta * 0.18;
+    //------------------------------------------
+    // Rotation
+    //------------------------------------------
 
-    //------------------------------------------------
-    // Living blue
-    //------------------------------------------------
+    energyCore.rotation.y +=
+
+        delta * 0.18;
+
+    //------------------------------------------
+    // Living blue color
+    //------------------------------------------
 
     const hue =
+
         0.55 +
-        Math.sin(elapsed * 0.18) * 0.02;
+
+        Math.sin(elapsed * 0.22) * 0.02;
 
     energyCore.material.color.setHSL(
 
         hue,
-        0.9,
+
+        0.95,
+
         0.60
 
     );
@@ -91,9 +129,21 @@ export function updateEnergy(delta) {
     energyCore.material.emissive.setHSL(
 
         hue,
-        1,
-        0.40
+
+        1.0,
+
+        0.45
 
     );
+
+    //------------------------------------------
+    // Glow pulse
+    //------------------------------------------
+
+    energyCore.material.emissiveIntensity =
+
+        2.2 +
+
+        Math.sin(elapsed * 2.5) * 0.35;
 
 }
