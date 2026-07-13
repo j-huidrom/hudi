@@ -74,11 +74,7 @@ export function updateEnergy(delta) {
     // Breathing
     //------------------------------------------
 
-    const breathe =
-
-        1 +
-
-        Math.sin(elapsed * 1.4) * 0.04;
+const breathe = 1 + Math.sin(elapsed * 3.0) * 0.12;
 
     energyCore.scale.set(
 
@@ -95,8 +91,7 @@ export function updateEnergy(delta) {
     //------------------------------------------
 
     energyCore.position.y =
-
-        Math.sin(elapsed * 0.7) * 0.03;
+        Math.sin(elapsed * 2.0) * 0.18;
 
     //------------------------------------------
     // Rotation
