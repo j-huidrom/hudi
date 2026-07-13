@@ -10,6 +10,8 @@ Responsibility
 Creates and animates
 HUDI's living energy core.
 
+Consumes only visual parameters.
+
 Author:
 Project HUDI
 ==========================================================
@@ -17,11 +19,9 @@ Project HUDI
 
 import * as THREE from "https://unpkg.com/three@0.165.0/build/three.module.js";
 
-import {
+import { ENERGY } from "./config.js";
 
-    ENERGY
-
-} from "./config.js";
+import { getVisualState } from "./visualstate.js";
 
 /*
 ==========================================================
@@ -41,53 +41,47 @@ Create
 
 export function createEnergyCore(scene) {
 
-    const geometry =
-        new THREE.SphereGeometry(
+    const geometry = new THREE.SphereGeometry(
 
-            ENERGY.RADIUS,
+        ENERGY.RADIUS,
 
-            128,
+        128,
 
-            128
+        128
 
-        );
+    );
 
-    const material =
-        new THREE.MeshPhysicalMaterial({
+    const material = new THREE.MeshPhysicalMaterial({
 
-            color:
-                ENERGY.COLOR,
+        color: ENERGY.COLOR,
 
-            emissive:
-                ENERGY.EMISSIVE,
+        emissive: ENERGY.EMISSIVE,
 
-            emissiveIntensity:
-                ENERGY.EMISSIVE_INTENSITY,
+        emissiveIntensity: ENERGY.EMISSIVE_INTENSITY,
 
-            transmission: 0.95,
+        transmission: 0.95,
 
-            transparent: true,
+        transparent: true,
 
-            opacity: 0.82,
+        opacity: 0.82,
 
-            roughness: 0.08,
+        roughness: 0.08,
 
-            metalness: 0,
+        metalness: 0.0,
 
-            clearcoat: 1,
+        clearcoat: 1.0,
 
-            clearcoatRoughness: 0
+        clearcoatRoughness: 0.0
 
-        });
+    });
 
-    energyCore =
-        new THREE.Mesh(
+    energyCore = new THREE.Mesh(
 
-            geometry,
+        geometry,
 
-            material
+        material
 
-        );
+    );
 
     scene.add(
 
@@ -110,9 +104,13 @@ export function updateEnergy(delta) {
 
     elapsed += delta;
 
-    //----------------------------------------
-    // Breathing
-    //----------------------------------------
+    const visual = getVisualState();
+
+    /*
+    --------------------------------------------------
+    Breathing
+    --------------------------------------------------
+    */
 
     const breathe =
 
@@ -122,7 +120,9 @@ export function updateEnergy(delta) {
 
             elapsed *
 
-            ENERGY.BREATH_SPEED
+            ENERGY.BREATH_SPEED *
+
+            visual.energyPulseSpeed
 
         ) *
 
@@ -138,9 +138,11 @@ export function updateEnergy(delta) {
 
     );
 
-    //----------------------------------------
-    // Floating
-    //----------------------------------------
+    /*
+    --------------------------------------------------
+    Floating
+    --------------------------------------------------
+    */
 
     energyCore.position.y =
 
@@ -154,47 +156,61 @@ export function updateEnergy(delta) {
 
         ENERGY.FLOAT_HEIGHT;
 
-    //----------------------------------------
-    // Rotation
-    //----------------------------------------
+    /*
+    --------------------------------------------------
+    Rotation
+    --------------------------------------------------
+    */
 
     energyCore.rotation.y +=
 
         delta *
 
-        ENERGY.ROTATION_SPEED;
+        ENERGY.ROTATION_SPEED *
 
-    //----------------------------------------
-    // Living Glow
-    //----------------------------------------
+        0.60;
 
-    const glow =
+    /*
+    --------------------------------------------------
+    Glow
+    --------------------------------------------------
+    */
 
-        ENERGY.EMISSIVE_INTENSITY +
+    const pulse =
 
         Math.sin(
 
-            elapsed * 3.0
+            elapsed *
 
-        ) * 0.40;
+            3 *
+
+            visual.energyPulseSpeed
+
+        ) * 0.35;
 
     energyCore.material.emissiveIntensity =
 
-        glow;
+        ENERGY.EMISSIVE_INTENSITY *
 
-    //----------------------------------------
-    // Color Drift
-    //----------------------------------------
+        visual.energyBrightness +
+
+        pulse;
+
+    /*
+    --------------------------------------------------
+    Hue
+    --------------------------------------------------
+    */
 
     const hue =
 
-        0.56 +
+        visual.energyHue +
 
         Math.sin(
 
-            elapsed * 0.20
+            elapsed * 0.15
 
-        ) * 0.02;
+        ) * 0.01;
 
     energyCore.material.color.setHSL(
 

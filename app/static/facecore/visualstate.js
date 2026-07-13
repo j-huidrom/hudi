@@ -9,19 +9,12 @@ Responsibility
 
 Maps logical HUDI states into visual parameters.
 
-No rendering.
-No Three.js.
-
 Author:
 Project HUDI
 ==========================================================
 */
 
-import {
-
-    STATE
-
-} from "./config.js";
+import { STATE } from "./config.js";
 
 import {
 
@@ -39,9 +32,9 @@ Visual State
 const visual = {
 
     /*
-    ----------------------------------
+    ------------------------------------------------------
     Orb
-    ----------------------------------
+    ------------------------------------------------------
     */
 
     rotationMultiplier: 1.0,
@@ -55,9 +48,9 @@ const visual = {
     glassBrightness: 1.00,
 
     /*
-    ----------------------------------
+    ------------------------------------------------------
     Energy
-    ----------------------------------
+    ------------------------------------------------------
     */
 
     energyBrightness: 1.00,
@@ -67,9 +60,9 @@ const visual = {
     energyHue: 0.56,
 
     /*
-    ----------------------------------
+    ------------------------------------------------------
     Particles
-    ----------------------------------
+    ------------------------------------------------------
     */
 
     particleSpeed: 0.25,
@@ -79,9 +72,9 @@ const visual = {
     particleScale: 1.00,
 
     /*
-    ----------------------------------
+    ------------------------------------------------------
     General
-    ----------------------------------
+    ------------------------------------------------------
     */
 
     glow: 1.00,
@@ -128,13 +121,37 @@ function ready() {
 ==========================================================
 LISTENING
 
-Placeholder
+Focused.
+Still.
+Attentive.
 ==========================================================
 */
 
 function listening() {
 
-    ready();
+    visual.rotationMultiplier = 0.20;
+
+    visual.breathingAmplitude = 0.005;
+
+    visual.breathingSpeed = 0.25;
+
+    visual.glassOpacity = 0.98;
+
+    visual.glassBrightness = 1.30;
+
+    visual.energyBrightness = 1.35;
+
+    visual.energyPulseSpeed = 0.60;
+
+    visual.energyHue = 0.53;
+
+    visual.particleSpeed = 0.12;
+
+    visual.particleOpacity = 0.65;
+
+    visual.particleScale = 0.95;
+
+    visual.glow = 1.30;
 
 }
 
@@ -182,7 +199,7 @@ function goodbye() {
 
 /*
 ==========================================================
-Apply State
+Apply
 ==========================================================
 */
 
@@ -230,7 +247,7 @@ function applyState(state) {
 
 /*
 ==========================================================
-Initialization
+Initialize
 ==========================================================
 */
 
@@ -242,11 +259,7 @@ applyState(
 
 onStateChanged(
 
-    state => {
-
-        applyState(state);
-
-    }
+    state => applyState(state)
 
 );
 
@@ -261,11 +274,5 @@ export function getVisualState() {
     return visual;
 
 }
-
-/*
-==========================================================
-Developer Console
-==========================================================
-*/
 
 window.HUDI.visual = visual;
