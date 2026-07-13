@@ -1,26 +1,11 @@
 import * as THREE from "https://unpkg.com/three@0.165.0/build/three.module.js";
 
-import { renderer } from "./renderer.js";
+import { renderer, camera } from "./renderer.js";
 
-import {
+import { scene, createScene } from "./scene.js";
 
-    scene,
-    camera,
-    createScene
-
-} from "./scene.js";
-
-import {
-
-    updateOrb
-
-} from "./orb.js";
-
-import {
-
-    updateEnergy
-
-} from "./energy.js";
+import { updateOrb } from "./orb.js";
+import { updateEnergy } from "./energy.js";
 
 /* ==========================================================
    Build Scene
