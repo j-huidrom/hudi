@@ -1,13 +1,3 @@
-import * as THREE from "https://unpkg.com/three@0.165.0/build/three.module.js";
-
-/** Creates the Three.js scene and its light rig. */
-export function createScene() {
-  const scene = new THREE.Scene();
-  scene.add(new THREE.HemisphereLight(0x84dfff, 0x02040c, 2.1));
-  const key = new THREE.PointLight(0x77ddff, 20, 12, 2); key.position.set(2.5, 2.5, 4); scene.add(key);
-  const rim = new THREE.PointLight(0x2e62ff, 13, 10, 2); rim.position.set(-3, -1.5, -2); scene.add(rim);
-  return scene;
-}
 /*
 ==========================================================
 HUDI FaceCore 1.0
