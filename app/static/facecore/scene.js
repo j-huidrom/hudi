@@ -1,90 +1,121 @@
-import * as THREE from "https://unpkg.com/three@0.165.0/build/three.module.js";
+/*
+==========================================================
+HUDI FaceCore
+State Engine
+==========================================================
+*/
 
-import { camera } from "./renderer.js";
+export const HUDI_STATE = {
 
-import { createOrb } from "./orb.js";
-import { createEnergyCore } from "./energy.js";
+    BOOT: "boot",
 
-/* ==========================================================
-   Scene
-========================================================== */
+    READY: "ready",
 
-export const scene = new THREE.Scene();
+    LISTENING: "listening",
 
-/* ==========================================================
-   Background
-========================================================== */
+    THINKING: "thinking",
 
-scene.background = null;
+    SPEAKING: "speaking",
 
-/* ==========================================================
-   Lights
-========================================================== */
+    GOODBYE: "goodbye"
 
-const ambientLight = new THREE.AmbientLight(
+};
 
-    0xffffff,
+let currentState = HUDI_STATE.BOOT;
 
-    1.6
+const listeners = [];
 
-);
+/*
+==========================================================
+Current State
+==========================================================
+*/
 
-scene.add(ambientLight);
+export function getState() {
 
-const keyLight = new THREE.PointLight(
-
-    0x77ccff,
-
-    18,
-
-    100
-
-);
-
-keyLight.position.set(
-
-    3,
-    3,
-    5
-
-);
-
-scene.add(keyLight);
-
-const rimLight = new THREE.PointLight(
-
-    0x2255ff,
-
-    8,
-
-    100
-
-);
-
-rimLight.position.set(
-
-    -4,
-    -2,
-    -3
-
-);
-
-scene.add(rimLight);
-
-/* ==========================================================
-   Scene Objects
-========================================================== */
-
-export function createScene() {
-
-    createOrb(scene);
-
-    createEnergyCore(scene);
+    return currentState;
 
 }
 
-/* ==========================================================
-   Export Camera
-========================================================== */
+/*
+==========================================================
+Change State
+==========================================================
+*/
 
-export { camera };
+export function setState(state) {
+
+    if (!Object.values(HUDI_STATE).includes(state)) {
+
+        console.warn(
+
+            "[HUDI] Unknown state:",
+
+            state
+
+        );
+
+        return;
+
+    }
+
+    if (state === currentState)
+        return;
+
+    currentState = state;
+
+    console.log(
+
+        "%cHUDI → " + state.toUpperCase(),
+
+        "color:#55bbff;font-weight:bold;"
+
+    );
+
+    listeners.forEach(
+
+        listener => listener(state)
+
+    );
+
+}
+
+/*
+==========================================================
+Subscribe
+==========================================================
+*/
+
+export function onStateChanged(callback) {
+
+    listeners.push(callback);
+
+}
+
+/*
+==========================================================
+Developer Console
+==========================================================
+*/
+
+window.HUDI = {
+
+    state: HUDI_STATE,
+
+    getState,
+
+    setState
+
+};
+
+/*
+==========================================================
+Boot
+==========================================================
+*/
+
+setTimeout(() => {
+
+    setState(HUDI_STATE.READY);
+
+}, 500);
