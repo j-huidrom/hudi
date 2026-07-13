@@ -10,6 +10,10 @@ Responsibility
 Creates and animates
 HUDI's glass shell.
 
+Consumes only visual parameters.
+
+Never knows runtime states.
+
 Author:
 Project HUDI
 ==========================================================
@@ -23,6 +27,12 @@ import {
 
 } from "./config.js";
 
+import {
+
+    getVisualState
+
+} from "./visualstate.js";
+
 /*
 ==========================================================
 Orb
@@ -30,6 +40,8 @@ Orb
 */
 
 let orb;
+
+let elapsed = 0;
 
 /*
 ==========================================================
@@ -39,46 +51,39 @@ Create
 
 export function createOrb(scene) {
 
-    const geometry =
-        new THREE.SphereGeometry(
+    const geometry = new THREE.SphereGeometry(
 
-            ORB.RADIUS,
+        ORB.RADIUS,
 
-            ORB.SEGMENTS,
+        ORB.SEGMENTS,
 
-            ORB.SEGMENTS
+        ORB.SEGMENTS
 
-        );
+    );
 
-    const material =
-        new THREE.MeshPhysicalMaterial({
+    const material = new THREE.MeshPhysicalMaterial({
 
-            color:
-                ORB.COLOR,
+        color: ORB.COLOR,
 
-            transmission:
-                ORB.TRANSMISSION,
+        transmission: ORB.TRANSMISSION,
 
-            transparent: true,
+        transparent: true,
 
-            opacity: 1.0,
+        opacity: 1.0,
 
-            roughness:
-                ORB.ROUGHNESS,
+        roughness: ORB.ROUGHNESS,
 
-            metalness: 0.0,
+        metalness: 0.0,
 
-            clearcoat: 1,
+        clearcoat: 1.0,
 
-            clearcoatRoughness: 0,
+        clearcoatRoughness: 0.0,
 
-            thickness:
-                ORB.THICKNESS,
+        thickness: ORB.THICKNESS,
 
-            ior:
-                ORB.IOR
+        ior: ORB.IOR
 
-        });
+    });
 
     orb = new THREE.Mesh(
 
@@ -102,8 +107,6 @@ Update
 ==========================================================
 */
 
-let elapsed = 0;
-
 export function updateOrb(delta) {
 
     if (!orb)
@@ -111,19 +114,37 @@ export function updateOrb(delta) {
 
     elapsed += delta;
 
-    //---------------------------------------
-    // Idle Rotation
-    //---------------------------------------
+    const visual =
+
+        getVisualState();
+
+    /*
+    ---------------------------------------
+    Rotation
+    ---------------------------------------
+    */
 
     orb.rotation.y +=
 
         delta *
 
-        ORB.ROTATION_SPEED;
+        ORB.ROTATION_SPEED *
 
-    //---------------------------------------
-    // Breathing
-    //---------------------------------------
+        visual.rotationMultiplier;
+
+    orb.rotation.x =
+
+        Math.sin(
+
+            elapsed * 0.10
+
+        ) * 0.03;
+
+    /*
+    ---------------------------------------
+    Breathing
+    ---------------------------------------
+    */
 
     const breathe =
 
@@ -133,11 +154,11 @@ export function updateOrb(delta) {
 
             elapsed *
 
-            ORB.BREATH_SPEED
+            visual.breathingSpeed
 
         ) *
 
-        ORB.BREATH_SCALE;
+        visual.breathingAmplitude;
 
     orb.scale.set(
 
@@ -149,6 +170,38 @@ export function updateOrb(delta) {
 
     );
 
+    /*
+    ---------------------------------------
+    Glass Opacity
+    ---------------------------------------
+    */
+
+    orb.material.opacity =
+
+        visual.glassOpacity;
+
+    /*
+    ---------------------------------------
+    Glass Brightness
+    ---------------------------------------
+    */
+
+    const brightness =
+
+        0.35 +
+
+        visual.glassBrightness * 0.25;
+
+    orb.material.color.setHSL(
+
+        0.56,
+
+        0.75,
+
+        brightness
+
+    );
+
 }
 
 /*
@@ -157,7 +210,7 @@ Access
 ==========================================================
 */
 
-export function getOrb(){
+export function getOrb() {
 
     return orb;
 

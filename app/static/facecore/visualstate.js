@@ -7,9 +7,10 @@ visualstate.js
 
 Responsibility
 
-Maps logical HUDI states to visual parameters.
+Maps logical HUDI states into visual parameters.
 
-No Three.js rendering.
+No rendering.
+No Three.js.
 
 Author:
 Project HUDI
@@ -18,8 +19,7 @@ Project HUDI
 
 import {
 
-    STATE,
-    STATE_PROFILE
+    STATE
 
 } from "./config.js";
 
@@ -38,19 +38,147 @@ Visual State
 
 const visual = {
 
-    glow: 1.0,
-
-    particleMultiplier: 1.0,
+    /*
+    ----------------------------------
+    Orb
+    ----------------------------------
+    */
 
     rotationMultiplier: 1.0,
 
-    cloudOpacity: 0.50,
+    breathingAmplitude: 0.015,
 
-    energyBrightness: 1.0,
+    breathingSpeed: 0.60,
 
-    transitionSpeed: 3.0
+    glassOpacity: 0.92,
+
+    glassBrightness: 1.00,
+
+    /*
+    ----------------------------------
+    Energy
+    ----------------------------------
+    */
+
+    energyBrightness: 1.00,
+
+    energyPulseSpeed: 1.00,
+
+    energyHue: 0.56,
+
+    /*
+    ----------------------------------
+    Particles
+    ----------------------------------
+    */
+
+    particleSpeed: 0.25,
+
+    particleOpacity: 0.45,
+
+    particleScale: 1.00,
+
+    /*
+    ----------------------------------
+    General
+    ----------------------------------
+    */
+
+    glow: 1.00,
+
+    transitionSpeed: 2.50
 
 };
+
+/*
+==========================================================
+READY
+==========================================================
+*/
+
+function ready() {
+
+    visual.rotationMultiplier = 1.00;
+
+    visual.breathingAmplitude = 0.015;
+
+    visual.breathingSpeed = 0.60;
+
+    visual.glassOpacity = 0.92;
+
+    visual.glassBrightness = 1.00;
+
+    visual.energyBrightness = 1.00;
+
+    visual.energyPulseSpeed = 1.00;
+
+    visual.energyHue = 0.56;
+
+    visual.particleSpeed = 0.25;
+
+    visual.particleOpacity = 0.45;
+
+    visual.particleScale = 1.00;
+
+    visual.glow = 1.00;
+
+}
+
+/*
+==========================================================
+LISTENING
+
+Placeholder
+==========================================================
+*/
+
+function listening() {
+
+    ready();
+
+}
+
+/*
+==========================================================
+THINKING
+
+Placeholder
+==========================================================
+*/
+
+function thinking() {
+
+    ready();
+
+}
+
+/*
+==========================================================
+SPEAKING
+
+Placeholder
+==========================================================
+*/
+
+function speaking() {
+
+    ready();
+
+}
+
+/*
+==========================================================
+GOODBYE
+
+Placeholder
+==========================================================
+*/
+
+function goodbye() {
+
+    ready();
+
+}
 
 /*
 ==========================================================
@@ -64,88 +192,37 @@ function applyState(state) {
 
         case STATE.READY:
 
-            visual.glow =
-                STATE_PROFILE.READY.glow;
-
-            visual.particleMultiplier =
-                STATE_PROFILE.READY.particles;
-
-            visual.rotationMultiplier =
-                STATE_PROFILE.READY.rotation;
-
-            visual.cloudOpacity = 0.45;
-
-            visual.energyBrightness = 1.0;
+            ready();
 
             break;
 
         case STATE.LISTENING:
 
-            visual.glow =
-                STATE_PROFILE.LISTENING.glow;
-
-            visual.particleMultiplier =
-                STATE_PROFILE.LISTENING.particles;
-
-            visual.rotationMultiplier =
-                STATE_PROFILE.LISTENING.rotation;
-
-            visual.cloudOpacity = 0.75;
-
-            visual.energyBrightness = 1.25;
+            listening();
 
             break;
 
         case STATE.THINKING:
 
-            visual.glow =
-                STATE_PROFILE.THINKING.glow;
-
-            visual.particleMultiplier =
-                STATE_PROFILE.THINKING.particles;
-
-            visual.rotationMultiplier =
-                STATE_PROFILE.THINKING.rotation;
-
-            visual.cloudOpacity = 0.25;
-
-            visual.energyBrightness = 0.80;
+            thinking();
 
             break;
 
         case STATE.SPEAKING:
 
-            visual.glow =
-                STATE_PROFILE.SPEAKING.glow;
-
-            visual.particleMultiplier =
-                STATE_PROFILE.SPEAKING.particles;
-
-            visual.rotationMultiplier =
-                STATE_PROFILE.SPEAKING.rotation;
-
-            visual.cloudOpacity = 0.85;
-
-            visual.energyBrightness = 1.50;
+            speaking();
 
             break;
 
         case STATE.GOODBYE:
 
-            visual.glow =
-                STATE_PROFILE.GOODBYE.glow;
-
-            visual.particleMultiplier =
-                STATE_PROFILE.GOODBYE.particles;
-
-            visual.rotationMultiplier =
-                STATE_PROFILE.GOODBYE.rotation;
-
-            visual.cloudOpacity = 0.10;
-
-            visual.energyBrightness = 0.25;
+            goodbye();
 
             break;
+
+        default:
+
+            ready();
 
     }
 
@@ -153,7 +230,7 @@ function applyState(state) {
 
 /*
 ==========================================================
-Initialize
+Initialization
 ==========================================================
 */
 
@@ -165,7 +242,11 @@ applyState(
 
 onStateChanged(
 
-    state => applyState(state)
+    state => {
+
+        applyState(state);
+
+    }
 
 );
 
@@ -183,7 +264,7 @@ export function getVisualState() {
 
 /*
 ==========================================================
-Debug
+Developer Console
 ==========================================================
 */
 
