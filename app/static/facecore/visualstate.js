@@ -165,7 +165,29 @@ Placeholder
 
 function thinking() {
 
-    ready();
+    visual.rotationMultiplier = 0.08;
+
+    visual.breathingAmplitude = 0.003;
+
+    visual.breathingSpeed = 0.18;
+
+    visual.glassOpacity = 0.88;
+
+    visual.glassBrightness = 0.82;
+
+    visual.energyBrightness = 1.65;
+
+    visual.energyPulseSpeed = 0.45;
+
+    visual.energyHue = 0.61;
+
+    visual.particleSpeed = 0.60;
+
+    visual.particleOpacity = 0.35;
+
+    visual.particleScale = 1.15;
+
+    visual.glow = 0.90;
 
 }
 
@@ -179,7 +201,29 @@ Placeholder
 
 function speaking() {
 
-    ready();
+    visual.rotationMultiplier = 1.80;
+
+    visual.breathingAmplitude = 0.035;
+
+    visual.breathingSpeed = 2.20;
+
+    visual.glassOpacity = 0.96;
+
+    visual.glassBrightness = 1.45;
+
+    visual.energyBrightness = 2.10;
+
+    visual.energyPulseSpeed = 2.50;
+
+    visual.energyHue = 0.54;
+
+    visual.particleSpeed = 2.20;
+
+    visual.particleOpacity = 0.85;
+
+    visual.particleScale = 1.30;
+
+    visual.glow = 1.80;
 
 }
 
@@ -193,7 +237,29 @@ Placeholder
 
 function goodbye() {
 
-    ready();
+    visual.rotationMultiplier = 0.03;
+
+    visual.breathingAmplitude = 0.001;
+
+    visual.breathingSpeed = 0.10;
+
+    visual.glassOpacity = 0.20;
+
+    visual.glassBrightness = 0.25;
+
+    visual.energyBrightness = 0.15;
+
+    visual.energyPulseSpeed = 0.08;
+
+    visual.energyHue = 0.56;
+
+    visual.particleSpeed = 0.02;
+
+    visual.particleOpacity = 0.08;
+
+    visual.particleScale = 0.80;
+
+    visual.glow = 0.10;
 
 }
 
