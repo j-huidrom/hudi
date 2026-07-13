@@ -1,3 +1,4 @@
+import "./events.js";
 import { initScene, render, clock } from "./scene.js";
 import { initCore, updateCore } from "./core.js";
 import { getState } from "./state.js";
