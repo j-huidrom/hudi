@@ -1,48 +1,84 @@
+/*
+==========================================================
+HUDI FaceCore 1.0
+----------------------------------------------------------
+Module:
+orb.js
+
+Responsibility
+
+Creates and animates
+HUDI's glass shell.
+
+Author:
+Project HUDI
+==========================================================
+*/
+
 import * as THREE from "https://unpkg.com/three@0.165.0/build/three.module.js";
 
-/* ==========================================================
-   HUDI Glass Orb
-========================================================== */
+import {
 
-export let orb;
+    ORB
+
+} from "./config.js";
+
+/*
+==========================================================
+Orb
+==========================================================
+*/
+
+let orb;
+
+/*
+==========================================================
+Create
+==========================================================
+*/
 
 export function createOrb(scene) {
 
-    const geometry = new THREE.SphereGeometry(
+    const geometry =
+        new THREE.SphereGeometry(
 
-        1.0,
+            ORB.RADIUS,
 
-        128,
+            ORB.SEGMENTS,
 
-        128
+            ORB.SEGMENTS
 
-    );
+        );
 
-    const material = new THREE.MeshPhysicalMaterial({
+    const material =
+        new THREE.MeshPhysicalMaterial({
 
-        color: 0x5abfff,
+            color:
+                ORB.COLOR,
 
-        transmission: 0.98,
+            transmission:
+                ORB.TRANSMISSION,
 
-        transparent: true,
+            transparent: true,
 
-        opacity: 1.0,
+            opacity: 1.0,
 
-        roughness: 0.03,
+            roughness:
+                ORB.ROUGHNESS,
 
-        metalness: 0.0,
+            metalness: 0.0,
 
-        clearcoat: 1.0,
+            clearcoat: 1,
 
-        clearcoatRoughness: 0.0,
+            clearcoatRoughness: 0,
 
-        thickness: 0.8,
+            thickness:
+                ORB.THICKNESS,
 
-        ior: 1.45,
+            ior:
+                ORB.IOR
 
-        reflectivity: 1.0
-
-    });
+        });
 
     orb = new THREE.Mesh(
 
@@ -52,28 +88,77 @@ export function createOrb(scene) {
 
     );
 
-    orb.castShadow = false;
+    scene.add(
 
-    orb.receiveShadow = false;
+        orb
 
-    scene.add(orb);
+    );
 
 }
 
-/* ==========================================================
-   Idle Animation
-========================================================== */
+/*
+==========================================================
+Update
+==========================================================
+*/
+
+let elapsed = 0;
 
 export function updateOrb(delta) {
 
-    if (!orb) return;
+    if (!orb)
+        return;
 
-    orb.rotation.y += delta * 1.5;
+    elapsed += delta;
 
-    orb.rotation.x += delta * 0.4;
+    //---------------------------------------
+    // Idle Rotation
+    //---------------------------------------
 
-    const s = 1 + Math.sin(Date.now() * 0.003) * 0.08;
+    orb.rotation.y +=
 
-    orb.scale.set(s, s, s);
+        delta *
+
+        ORB.ROTATION_SPEED;
+
+    //---------------------------------------
+    // Breathing
+    //---------------------------------------
+
+    const breathe =
+
+        1 +
+
+        Math.sin(
+
+            elapsed *
+
+            ORB.BREATH_SPEED
+
+        ) *
+
+        ORB.BREATH_SCALE;
+
+    orb.scale.set(
+
+        breathe,
+
+        breathe,
+
+        breathe
+
+    );
+
+}
+
+/*
+==========================================================
+Access
+==========================================================
+*/
+
+export function getOrb(){
+
+    return orb;
 
 }

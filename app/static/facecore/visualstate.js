@@ -1,102 +1,190 @@
-import { getState, HUDI_STATE } from "./state.js";
+/*
+==========================================================
+HUDI FaceCore 1.0
+----------------------------------------------------------
+Module:
+visualstate.js
+
+Responsibility
+
+Maps logical HUDI states to visual parameters.
+
+No Three.js rendering.
+
+Author:
+Project HUDI
+==========================================================
+*/
+
+import {
+
+    STATE,
+    STATE_PROFILE
+
+} from "./config.js";
+
+import {
+
+    getState,
+    onStateChanged
+
+} from "./state.js";
+
+/*
+==========================================================
+Visual State
+==========================================================
+*/
 
 const visual = {
 
-    cloudOpacity: 0.45,
-    cloudTint: 1.0,
+    glow: 1.0,
 
-    fillIntensity: 30,
+    particleMultiplier: 1.0,
 
-    rotationSpeed: 0.10,
+    rotationMultiplier: 1.0,
 
-    glow: 1.0
+    cloudOpacity: 0.50,
+
+    energyBrightness: 1.0,
+
+    transitionSpeed: 3.0
 
 };
 
-function lerp(a, b, t) {
+/*
+==========================================================
+Apply State
+==========================================================
+*/
 
-    return a + (b - a) * t;
+function applyState(state) {
 
-}
+    switch (state) {
 
-export function updateVisualState(delta) {
+        case STATE.READY:
 
-    const state = getState();
+            visual.glow =
+                STATE_PROFILE.READY.glow;
 
-    let target = {
+            visual.particleMultiplier =
+                STATE_PROFILE.READY.particles;
 
-        cloudOpacity: 0.45,
-        cloudTint: 1.0,
-        fillIntensity: 30,
-        rotationSpeed: 0.10,
-        glow: 1.0
+            visual.rotationMultiplier =
+                STATE_PROFILE.READY.rotation;
 
-    };
+            visual.cloudOpacity = 0.45;
 
-    switch(state){
-
-        case HUDI_STATE.LISTENING:
-
-            target.cloudOpacity = 0.70;
-            target.cloudTint = 1.15;
-            target.fillIntensity = 40;
-            target.rotationSpeed = 0.05;
-            target.glow = 1.20;
+            visual.energyBrightness = 1.0;
 
             break;
 
-        case HUDI_STATE.THINKING:
+        case STATE.LISTENING:
 
-            target.cloudOpacity = 0.32;
-            target.cloudTint = 0.95;
-            target.fillIntensity = 20;
-            target.rotationSpeed = 0.02;
-            target.glow = 0.90;
+            visual.glow =
+                STATE_PROFILE.LISTENING.glow;
 
-            break;
+            visual.particleMultiplier =
+                STATE_PROFILE.LISTENING.particles;
 
-        case HUDI_STATE.SPEAKING:
+            visual.rotationMultiplier =
+                STATE_PROFILE.LISTENING.rotation;
 
-            target.cloudOpacity = 0.75;
-            target.cloudTint = 1.30;
-            target.fillIntensity = 45;
-            target.rotationSpeed = 0.14;
-            target.glow = 1.35;
+            visual.cloudOpacity = 0.75;
+
+            visual.energyBrightness = 1.25;
 
             break;
 
-        case HUDI_STATE.GOODBYE:
+        case STATE.THINKING:
 
-            target.cloudOpacity = 0.20;
-            target.fillIntensity = 10;
-            target.rotationSpeed = 0.04;
-            target.glow = 0.70;
+            visual.glow =
+                STATE_PROFILE.THINKING.glow;
+
+            visual.particleMultiplier =
+                STATE_PROFILE.THINKING.particles;
+
+            visual.rotationMultiplier =
+                STATE_PROFILE.THINKING.rotation;
+
+            visual.cloudOpacity = 0.25;
+
+            visual.energyBrightness = 0.80;
+
+            break;
+
+        case STATE.SPEAKING:
+
+            visual.glow =
+                STATE_PROFILE.SPEAKING.glow;
+
+            visual.particleMultiplier =
+                STATE_PROFILE.SPEAKING.particles;
+
+            visual.rotationMultiplier =
+                STATE_PROFILE.SPEAKING.rotation;
+
+            visual.cloudOpacity = 0.85;
+
+            visual.energyBrightness = 1.50;
+
+            break;
+
+        case STATE.GOODBYE:
+
+            visual.glow =
+                STATE_PROFILE.GOODBYE.glow;
+
+            visual.particleMultiplier =
+                STATE_PROFILE.GOODBYE.particles;
+
+            visual.rotationMultiplier =
+                STATE_PROFILE.GOODBYE.rotation;
+
+            visual.cloudOpacity = 0.10;
+
+            visual.energyBrightness = 0.25;
 
             break;
 
     }
 
-    const speed = delta * 5;
-
-    visual.cloudOpacity =
-        lerp(visual.cloudOpacity, target.cloudOpacity, speed);
-
-    visual.cloudTint =
-        lerp(visual.cloudTint, target.cloudTint, speed);
-
-    visual.fillIntensity =
-        lerp(visual.fillIntensity, target.fillIntensity, speed);
-
-    visual.rotationSpeed =
-        lerp(visual.rotationSpeed, target.rotationSpeed, speed);
-
-    visual.glow =
-        lerp(visual.glow, target.glow, speed);
-
 }
 
-export function getVisualState(){
+/*
+==========================================================
+Initialize
+==========================================================
+*/
+
+applyState(
+
+    getState()
+
+);
+
+onStateChanged(
+
+    state => applyState(state)
+
+);
+
+/*
+==========================================================
+Access
+==========================================================
+*/
+
+export function getVisualState() {
 
     return visual;
 
 }
+
+/*
+==========================================================
+Debug
+==========================================================
+*/
+
+window.HUDI.visual = visual;

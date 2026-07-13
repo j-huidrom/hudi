@@ -1,39 +1,196 @@
+/*
+==========================================================
+HUDI FaceCore 1.0
+----------------------------------------------------------
+Module:
+events.js
+
+Responsibility
+
+Connects FaceCore to HUDI backend using
+Server Sent Events (SSE).
+
+No rendering.
+No Three.js.
+
+Author:
+Project HUDI
+==========================================================
+*/
+
 import { setState } from "./state.js";
 
-console.log("[HUDI] Connecting to SSE...");
+/*
+==========================================================
+Configuration
+==========================================================
+*/
 
-const source = new EventSource("/api/face/events");
+const EVENTS_URL = "/api/face/events";
 
-source.onopen = () => {
+/*
+==========================================================
+Event Source
+==========================================================
+*/
 
-    console.log("[HUDI] SSE Connected");
+let eventSource = null;
 
-};
+/*
+==========================================================
+Connect
+==========================================================
+*/
 
-source.onmessage = (event) => {
+export function connectEvents() {
 
-    try {
+    if (eventSource) {
 
-        const data = JSON.parse(event.data);
-
-        console.log("[HUDI] Event:", data);
-
-        if (data.state) {
-
-            setState(data.state);
-
-        }
-
-    } catch (err) {
-
-        console.error("[HUDI] Invalid SSE message", err);
+        eventSource.close();
 
     }
 
-};
+    console.log(
 
-source.onerror = (err) => {
+        "%cHUDI Connecting...",
 
-    console.error("[HUDI] SSE Error", err);
+        "color:#66bbff;font-weight:bold;"
 
-};
+    );
+
+    eventSource = new EventSource(
+
+        EVENTS_URL
+
+    );
+
+    /*
+    ------------------------------------------
+    Connected
+    ------------------------------------------
+    */
+
+    eventSource.onopen = () => {
+
+        console.log(
+
+            "%cHUDI Connected",
+
+            "color:#00dd88;font-weight:bold;"
+
+        );
+
+    };
+
+    /*
+    ------------------------------------------
+    Message
+    ------------------------------------------
+    */
+
+    eventSource.onmessage = event => {
+
+        try {
+
+            const payload = JSON.parse(
+
+                event.data
+
+            );
+
+            console.log(
+
+                "[HUDI EVENT]",
+
+                payload
+
+            );
+
+            if (payload.state) {
+
+                setState(
+
+                    payload.state
+
+                );
+
+            }
+
+        }
+
+        catch (error) {
+
+            console.error(
+
+                "[HUDI] Invalid SSE message",
+
+                error
+
+            );
+
+        }
+
+    };
+
+    /*
+    ------------------------------------------
+    Error
+    ------------------------------------------
+    */
+
+    eventSource.onerror = error => {
+
+        console.warn(
+
+            "[HUDI] SSE disconnected",
+
+            error
+
+        );
+
+    };
+
+}
+
+/*
+==========================================================
+Disconnect
+==========================================================
+*/
+
+export function disconnectEvents() {
+
+    if (!eventSource)
+        return;
+
+    eventSource.close();
+
+    eventSource = null;
+
+}
+
+/*
+==========================================================
+Reconnect
+==========================================================
+*/
+
+export function reconnectEvents() {
+
+    disconnectEvents();
+
+    connectEvents();
+
+}
+
+/*
+==========================================================
+Developer Console
+==========================================================
+*/
+
+window.HUDI.connect = connectEvents;
+
+window.HUDI.disconnect = disconnectEvents;
+
+window.HUDI.reconnect = reconnectEvents;

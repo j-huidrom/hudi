@@ -1,79 +1,135 @@
+/*
+==========================================================
+HUDI FaceCore 1.0
+----------------------------------------------------------
+Module:
+renderer.js
+
+Responsibility:
+
+• Create WebGL renderer
+• Create camera
+• Handle resize
+
+Nothing else.
+
+Author:
+Project HUDI
+==========================================================
+*/
+
 import * as THREE from "https://unpkg.com/three@0.165.0/build/three.module.js";
 
-/* ==========================================================
-   Renderer
-========================================================== */
+import {
 
-const container = document.getElementById("scene-container");
+    RENDERER,
 
-export const renderer = new THREE.WebGLRenderer({
+    CAMERA
 
-    antialias: true,
+} from "./config.js";
 
-    alpha: true,
+/*
+==========================================================
+Container
+==========================================================
+*/
 
-    powerPreference: "high-performance"
+const container =
+    document.getElementById(
+        "scene-container"
+    );
 
-});
+/*
+==========================================================
+Renderer
+==========================================================
+*/
+
+export const renderer =
+    new THREE.WebGLRenderer({
+
+        antialias:
+            RENDERER.ANTIALIAS,
+
+        alpha:
+            RENDERER.ALPHA,
+
+        powerPreference:
+            RENDERER.POWER_PREFERENCE
+
+    });
 
 renderer.setPixelRatio(
-    Math.min(window.devicePixelRatio, 2)
+
+    Math.min(
+
+        window.devicePixelRatio,
+
+        RENDERER.MAX_PIXEL_RATIO
+
+    )
+
 );
 
 renderer.setSize(
+
     window.innerWidth,
+
     window.innerHeight
+
 );
 
 renderer.outputColorSpace =
     THREE.SRGBColorSpace;
 
-renderer.shadowMap.enabled = true;
+renderer.shadowMap.enabled = false;
 
 container.appendChild(
     renderer.domElement
 );
 
-/* ==========================================================
-   Camera
-========================================================== */
+/*
+==========================================================
+Camera
+==========================================================
+*/
 
 export const camera =
     new THREE.PerspectiveCamera(
 
-        35,
+        CAMERA.FOV,
 
         window.innerWidth /
         window.innerHeight,
 
-        0.1,
+        CAMERA.NEAR,
 
-        100
+        CAMERA.FAR
 
     );
 
-/*
- * Camera starts here.
- * Scene.js can adjust later if required.
- */
 camera.position.set(
 
-    0,
+    CAMERA.POSITION.x,
 
-    0,
+    CAMERA.POSITION.y,
 
-    4
+    CAMERA.POSITION.z
 
 );
 
-/* ==========================================================
-   Resize
-========================================================== */
+/*
+==========================================================
+Resize
+==========================================================
+*/
 
 export function resizeRenderer() {
 
     camera.aspect =
+
         window.innerWidth /
+
         window.innerHeight;
 
     camera.updateProjectionMatrix();
@@ -89,18 +145,41 @@ export function resizeRenderer() {
     renderer.setPixelRatio(
 
         Math.min(
+
             window.devicePixelRatio,
-            2
+
+            RENDERER.MAX_PIXEL_RATIO
+
         )
 
     );
 
 }
 
+/*
+==========================================================
+Events
+==========================================================
+*/
+
 window.addEventListener(
 
     "resize",
 
     resizeRenderer
+
+);
+
+/*
+==========================================================
+Developer Console
+==========================================================
+*/
+
+console.log(
+
+    "%cRenderer Ready",
+
+    "color:#66bbff;font-weight:bold;"
 
 );

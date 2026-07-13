@@ -1,102 +1,255 @@
-import { getState, HUDI_STATE } from "./state.js";
+/*
+==========================================================
+HUDI FaceCore 1.0
+----------------------------------------------------------
+Module:
+particles.js
 
-const visual = {
+Responsibility
 
-    cloudOpacity: 0.45,
-    cloudTint: 1.0,
+Creates and animates
+HUDI's surrounding energy particles.
 
-    fillIntensity: 30,
+Author:
+Project HUDI
+==========================================================
+*/
 
-    rotationSpeed: 0.10,
+import * as THREE from "https://unpkg.com/three@0.165.0/build/three.module.js";
 
-    glow: 1.0
+import {
 
-};
+    PARTICLES
 
-function lerp(a, b, t) {
+} from "./config.js";
 
-    return a + (b - a) * t;
+/*
+==========================================================
+Particle Group
+==========================================================
+*/
 
-}
+let particleGroup;
 
-export function updateVisualState(delta) {
+let particleSystem;
 
-    const state = getState();
+let positions;
 
-    let target = {
+let elapsed = 0;
 
-        cloudOpacity: 0.45,
-        cloudTint: 1.0,
-        fillIntensity: 30,
-        rotationSpeed: 0.10,
-        glow: 1.0
+/*
+==========================================================
+Create
+==========================================================
+*/
 
-    };
+export function createParticles(scene) {
 
-    switch(state){
+    particleGroup = new THREE.Group();
 
-        case HUDI_STATE.LISTENING:
+    //-----------------------------------------
+    // Geometry
+    //-----------------------------------------
 
-            target.cloudOpacity = 0.70;
-            target.cloudTint = 1.15;
-            target.fillIntensity = 40;
-            target.rotationSpeed = 0.05;
-            target.glow = 1.20;
+    const geometry =
+        new THREE.BufferGeometry();
 
-            break;
+    positions =
+        new Float32Array(
 
-        case HUDI_STATE.THINKING:
+            PARTICLES.COUNT * 3
 
-            target.cloudOpacity = 0.32;
-            target.cloudTint = 0.95;
-            target.fillIntensity = 20;
-            target.rotationSpeed = 0.02;
-            target.glow = 0.90;
+        );
 
-            break;
+    for (let i = 0; i < PARTICLES.COUNT; i++) {
 
-        case HUDI_STATE.SPEAKING:
+        const radius =
 
-            target.cloudOpacity = 0.75;
-            target.cloudTint = 1.30;
-            target.fillIntensity = 45;
-            target.rotationSpeed = 0.14;
-            target.glow = 1.35;
+            PARTICLES.CLOUD_RADIUS *
 
-            break;
+            (0.7 + Math.random() * 0.6);
 
-        case HUDI_STATE.GOODBYE:
+        const theta =
 
-            target.cloudOpacity = 0.20;
-            target.fillIntensity = 10;
-            target.rotationSpeed = 0.04;
-            target.glow = 0.70;
+            Math.random() *
 
-            break;
+            Math.PI * 2;
+
+        const phi =
+
+            Math.acos(
+
+                2 * Math.random() - 1
+
+            );
+
+        positions[i * 3 + 0] =
+
+            radius *
+
+            Math.sin(phi) *
+
+            Math.cos(theta);
+
+        positions[i * 3 + 1] =
+
+            radius *
+
+            Math.cos(phi);
+
+        positions[i * 3 + 2] =
+
+            radius *
+
+            Math.sin(phi) *
+
+            Math.sin(theta);
 
     }
 
-    const speed = delta * 5;
+    geometry.setAttribute(
 
-    visual.cloudOpacity =
-        lerp(visual.cloudOpacity, target.cloudOpacity, speed);
+        "position",
 
-    visual.cloudTint =
-        lerp(visual.cloudTint, target.cloudTint, speed);
+        new THREE.BufferAttribute(
 
-    visual.fillIntensity =
-        lerp(visual.fillIntensity, target.fillIntensity, speed);
+            positions,
 
-    visual.rotationSpeed =
-        lerp(visual.rotationSpeed, target.rotationSpeed, speed);
+            3
 
-    visual.glow =
-        lerp(visual.glow, target.glow, speed);
+        )
+
+    );
+
+    //-----------------------------------------
+    // Material
+    //-----------------------------------------
+
+    const material =
+        new THREE.PointsMaterial({
+
+            color: 0x66bbff,
+
+            size: PARTICLES.SIZE,
+
+            transparent: true,
+
+            opacity: 0.55,
+
+            depthWrite: false,
+
+            blending:
+
+                THREE.AdditiveBlending
+
+        });
+
+    //-----------------------------------------
+    // System
+    //-----------------------------------------
+
+    particleSystem =
+        new THREE.Points(
+
+            geometry,
+
+            material
+
+        );
+
+    particleGroup.add(
+
+        particleSystem
+
+    );
+
+    scene.add(
+
+        particleGroup
+
+    );
 
 }
 
-export function getVisualState(){
+/*
+==========================================================
+Update
+==========================================================
+*/
 
-    return visual;
+export function updateParticles(delta) {
+
+    if (!particleGroup)
+        return;
+
+    elapsed += delta;
+
+    //-----------------------------------------
+    // Slow rotation
+    //-----------------------------------------
+
+    particleGroup.rotation.y +=
+
+        delta *
+
+        PARTICLES.ROTATION_SPEED;
+
+    particleGroup.rotation.x =
+
+        Math.sin(
+
+            elapsed * 0.15
+
+        ) * 0.08;
+
+    //-----------------------------------------
+    // Gentle breathing
+    //-----------------------------------------
+
+    const scale =
+
+        1 +
+
+        Math.sin(
+
+            elapsed * 0.8
+
+        ) * 0.02;
+
+    particleGroup.scale.set(
+
+        scale,
+
+        scale,
+
+        scale
+
+    );
+
+    //-----------------------------------------
+    // Opacity pulse
+    //-----------------------------------------
+
+    particleSystem.material.opacity =
+
+        0.45 +
+
+        Math.sin(
+
+            elapsed * 2
+
+        ) * 0.10;
+
+}
+
+/*
+==========================================================
+Access
+==========================================================
+*/
+
+export function getParticles() {
+
+    return particleGroup;
 
 }

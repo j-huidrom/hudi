@@ -1,121 +1,152 @@
+import * as THREE from "https://unpkg.com/three@0.165.0/build/three.module.js";
+
+/** Creates the Three.js scene and its light rig. */
+export function createScene() {
+  const scene = new THREE.Scene();
+  scene.add(new THREE.HemisphereLight(0x84dfff, 0x02040c, 2.1));
+  const key = new THREE.PointLight(0x77ddff, 20, 12, 2); key.position.set(2.5, 2.5, 4); scene.add(key);
+  const rim = new THREE.PointLight(0x2e62ff, 13, 10, 2); rim.position.set(-3, -1.5, -2); scene.add(rim);
+  return scene;
+}
 /*
 ==========================================================
-HUDI FaceCore
-State Engine
+HUDI FaceCore 1.0
+----------------------------------------------------------
+Module:
+scene.js
+
+Responsibility:
+
+• Own the Three.js Scene
+• Create lighting
+• Build FaceCore objects
+
+Never owns:
+
+✗ Camera
+✗ Renderer
+
+Author:
+Project HUDI
 ==========================================================
 */
 
-export const HUDI_STATE = {
+import * as THREE from "https://unpkg.com/three@0.165.0/build/three.module.js";
 
-    BOOT: "boot",
+import { LIGHTING } from "./config.js";
 
-    READY: "ready",
-
-    LISTENING: "listening",
-
-    THINKING: "thinking",
-
-    SPEAKING: "speaking",
-
-    GOODBYE: "goodbye"
-
-};
-
-let currentState = HUDI_STATE.BOOT;
-
-const listeners = [];
+import { createOrb } from "./orb.js";
+import { createEnergyCore } from "./energy.js";
+import { createParticles } from "./particles.js";
 
 /*
 ==========================================================
-Current State
+Scene
 ==========================================================
 */
 
-export function getState() {
+export const scene = new THREE.Scene();
 
-    return currentState;
+scene.background = null;
+
+/*
+==========================================================
+Lights
+==========================================================
+*/
+
+function createLights() {
+
+    //------------------------------------
+    // Ambient
+    //------------------------------------
+
+    const ambient = new THREE.AmbientLight(
+
+        0xffffff,
+
+        LIGHTING.AMBIENT
+
+    );
+
+    scene.add(ambient);
+
+    //------------------------------------
+    // Key Light
+    //------------------------------------
+
+    const key = new THREE.PointLight(
+
+        0x66bbff,
+
+        LIGHTING.KEY,
+
+        100
+
+    );
+
+    key.position.set(
+
+        3,
+
+        3,
+
+        5
+
+    );
+
+    scene.add(key);
+
+    //------------------------------------
+    // Rim Light
+    //------------------------------------
+
+    const rim = new THREE.PointLight(
+
+        0x2255ff,
+
+        LIGHTING.RIM,
+
+        100
+
+    );
+
+    rim.position.set(
+
+        -4,
+
+        -2,
+
+        -3
+
+    );
+
+    scene.add(rim);
 
 }
 
 /*
 ==========================================================
-Change State
+Build Scene
 ==========================================================
 */
 
-export function setState(state) {
+export function createScene() {
 
-    if (!Object.values(HUDI_STATE).includes(state)) {
+    createLights();
 
-        console.warn(
+    createOrb(scene);
 
-            "[HUDI] Unknown state:",
+    createEnergyCore(scene);
 
-            state
-
-        );
-
-        return;
-
-    }
-
-    if (state === currentState)
-        return;
-
-    currentState = state;
+    createParticles(scene);
 
     console.log(
 
-        "%cHUDI → " + state.toUpperCase(),
+        "%cScene Ready",
 
-        "color:#55bbff;font-weight:bold;"
-
-    );
-
-    listeners.forEach(
-
-        listener => listener(state)
+        "color:#66bbff;font-weight:bold;"
 
     );
 
 }
-
-/*
-==========================================================
-Subscribe
-==========================================================
-*/
-
-export function onStateChanged(callback) {
-
-    listeners.push(callback);
-
-}
-
-/*
-==========================================================
-Developer Console
-==========================================================
-*/
-
-window.HUDI = {
-
-    state: HUDI_STATE,
-
-    getState,
-
-    setState
-
-};
-
-/*
-==========================================================
-Boot
-==========================================================
-*/
-
-setTimeout(() => {
-
-    setState(HUDI_STATE.READY);
-
-}, 500);
