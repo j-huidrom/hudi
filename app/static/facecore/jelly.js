@@ -1,8 +1,8 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.164/build/three.module.js";
 
-export let orb;
+export let jelly;
 
-export function createOrb(scene) {
+export function createJelly(scene) {
 
     const geometry = new THREE.SphereGeometry(
 
@@ -36,13 +36,13 @@ export function createOrb(scene) {
 
     });
 
-    orb = new THREE.Mesh(
+    jelly = new THREE.Mesh(
 
         geometry,
         material
 
     );
 
-    scene.add(orb);
+    scene.add(jelly);
 
 }

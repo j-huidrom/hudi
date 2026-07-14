@@ -1,13 +1,13 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.164/build/three.module.js";
 
-export let particles;
+export let cells;
 
 const COUNT = 180;
 
 let positions;
 let velocities;
 
-export function createParticles(scene){
+export function createCells(scene){
 
     const geometry = new THREE.BufferGeometry();
 
@@ -72,7 +72,7 @@ export function createParticles(scene){
 
     });
 
-    particles =
+    cells =
 
         new THREE.Points(
 
@@ -82,6 +82,6 @@ export function createParticles(scene){
 
         );
 
-    scene.add(particles);
+    scene.add(cells);
 
 }
