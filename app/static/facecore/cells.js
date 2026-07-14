@@ -6,41 +6,50 @@ export function createCells(scene) {
 
     const geometry = new THREE.SphereGeometry(0.018, 16, 16);
 
-    const material = new THREE.MeshBasicMaterial({
-        color: 0x9fe8ff
-    });
+    for (let i = 0; i < 260; i++) {
 
-    for (let i = 0; i < 350; i++) {
+        const material = new THREE.MeshBasicMaterial({
+            color: 0x8edcff,
+            transparent: true,
+            opacity: 0.9
+        });
 
-        const cell = new THREE.Mesh(
-            geometry,
-            material.clone()
-        );
+        const cell = new THREE.Mesh(geometry, material);
 
-        // random point inside sphere
-        const r = Math.cbrt(Math.random()) * 0.92;
+        const radius = Math.cbrt(Math.random()) * 0.9;
 
         const theta = Math.random() * Math.PI * 2;
         const phi = Math.acos(2 * Math.random() - 1);
 
         cell.position.set(
-
-            r * Math.sin(phi) * Math.cos(theta),
-
-            r * Math.sin(phi) * Math.sin(theta),
-
-            r * Math.cos(phi)
-
+            radius * Math.sin(phi) * Math.cos(theta),
+            radius * Math.sin(phi) * Math.sin(theta),
+            radius * Math.cos(phi)
         );
 
-        const s = 0.5 + Math.random();
+        // Initial size
+        const scale = 0.4 + Math.random() * 1.6;
+        cell.scale.setScalar(scale);
 
-        cell.scale.set(s, s, s);
+        // Save for animation
+        cell.userData = {
+
+            home: cell.position.clone(),
+
+            scale: scale,
+
+            angle: Math.random() * Math.PI * 2,
+
+            speed: 0.2 + Math.random() * 0.5,
+
+            radius: 0.003 + Math.random() * 0.012,
+
+            pulse: Math.random() * Math.PI * 2
+
+        };
 
         scene.add(cell);
 
         cells.push(cell);
-
     }
-
 }
