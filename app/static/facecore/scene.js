@@ -1,6 +1,7 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.164/build/three.module.js";
 import { createOrb } from "./orb.js";
 import { createCore } from "./core.js";
+import { createParticles } from "./particles.js";
 
 export let scene;
 export let camera;
@@ -57,5 +58,7 @@ export function createScene() {
     createOrb(scene);
 
     createCore(scene);
+
+    createParticles(scene);
 
 }
