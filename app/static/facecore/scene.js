@@ -1,142 +1,55 @@
-/*
-==========================================================
-HUDI FaceCore 1.0
-----------------------------------------------------------
-Module:
-scene.js
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.164/build/three.module.js";
 
-Responsibility:
+export let scene;
+export let camera;
 
-• Own the Three.js Scene
-• Create lighting
-• Build FaceCore objects
+export function createScene() {
 
-Never owns:
+    scene = new THREE.Scene();
 
-✗ Camera
-✗ Renderer
+    camera = new THREE.PerspectiveCamera(
 
-Author:
-Project HUDI
-==========================================================
-*/
+        35,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        100
 
-import * as THREE from "https://unpkg.com/three@0.165.0/build/three.module.js";
+    );
 
-import { LIGHTING } from "./config.js";
+    camera.position.z = 4;
 
-import { createOrb } from "./orb.js";
-import { createEnergyCore } from "./energy.js";
-import { createParticles } from "./particles.js";
-
-/*
-==========================================================
-Scene
-==========================================================
-*/
-
-export const scene = new THREE.Scene();
-
-scene.background = null;
-
-/*
-==========================================================
-Lights
-==========================================================
-*/
-
-function createLights() {
-
-    //------------------------------------
-    // Ambient
-    //------------------------------------
+    //----------------------------------
+    // Ambient Light
+    //----------------------------------
 
     const ambient = new THREE.AmbientLight(
 
         0xffffff,
-
-        LIGHTING.AMBIENT
+        2.5
 
     );
 
     scene.add(ambient);
 
-    //------------------------------------
-    // Key Light
-    //------------------------------------
+    //----------------------------------
+    // Blue Key Light
+    //----------------------------------
 
     const key = new THREE.PointLight(
 
-        0x66bbff,
-
-        LIGHTING.KEY,
-
-        100
+        0x55bbff,
+        80
 
     );
 
     key.position.set(
 
         3,
-
         3,
-
-        5
+        4
 
     );
 
     scene.add(key);
-
-    //------------------------------------
-    // Rim Light
-    //------------------------------------
-
-    const rim = new THREE.PointLight(
-
-        0x2255ff,
-
-        LIGHTING.RIM,
-
-        100
-
-    );
-
-    rim.position.set(
-
-        -4,
-
-        -2,
-
-        -3
-
-    );
-
-    scene.add(rim);
-
-}
-
-/*
-==========================================================
-Build Scene
-==========================================================
-*/
-
-export function createScene() {
-
-    createLights();
-
-    createOrb(scene);
-
-    createEnergyCore(scene);
-
-    createParticles(scene);
-
-    console.log(
-
-        "%cScene Ready",
-
-        "color:#66bbff;font-weight:bold;"
-
-    );
 
 }
