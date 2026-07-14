@@ -5,24 +5,22 @@ export let jelly;
 export function createJelly(scene) {
 
     const geometry = new THREE.SphereGeometry(
-
-        1.05,
+        1.0,
         128,
         128
-
     );
 
     const material = new THREE.MeshPhysicalMaterial({
 
-        color: 0x5ec8ff,
+        color: 0x6FD6FF,
 
         transmission: 1.0,
 
         transparent: true,
 
-        opacity: 0.95,
+        opacity: 0.30,
 
-        roughness: 0.08,
+        roughness: 0.02,
 
         metalness: 0,
 
@@ -30,17 +28,19 @@ export function createJelly(scene) {
 
         clearcoatRoughness: 0,
 
-        ior: 1.45,
+        thickness: 0.45,
 
-        thickness: 1.2
+        ior: 1.15,
+
+        emissive: 0x49bfff,
+
+        emissiveIntensity: 0.18
 
     });
 
     jelly = new THREE.Mesh(
-
         geometry,
         material
-
     );
 
     scene.add(jelly);
