@@ -1,109 +1,44 @@
-/*
-==========================================================
-HUDI FaceCore 1.0
-----------------------------------------------------------
-Module:
-particles.js
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.164/build/three.module.js";
 
-Responsibility
+export let particles;
 
-Creates and animates
-HUDI's surrounding energy particles.
-
-Author:
-Project HUDI
-==========================================================
-*/
-
-import * as THREE from "https://unpkg.com/three@0.165.0/build/three.module.js";
-
-import {
-
-    PARTICLES
-
-} from "./config.js";
-
-/*
-==========================================================
-Particle Group
-==========================================================
-*/
-
-let particleGroup;
-
-let particleSystem;
+const COUNT = 180;
 
 let positions;
+let velocities;
 
-let elapsed = 0;
+export function createParticles(scene){
 
-/*
-==========================================================
-Create
-==========================================================
-*/
+    const geometry = new THREE.BufferGeometry();
 
-export function createParticles(scene) {
+    positions = new Float32Array(COUNT * 3);
 
-    particleGroup = new THREE.Group();
+    velocities = [];
 
-    //-----------------------------------------
-    // Geometry
-    //-----------------------------------------
+    for(let i=0;i<COUNT;i++){
 
-    const geometry =
-        new THREE.BufferGeometry();
+        const radius = 1.35 + Math.random()*0.8;
 
-    positions =
-        new Float32Array(
+        const theta = Math.random()*Math.PI*2;
 
-            PARTICLES.COUNT * 3
+        const phi = Math.acos(2*Math.random()-1);
+
+        positions[i*3+0] =
+            radius*Math.sin(phi)*Math.cos(theta);
+
+        positions[i*3+1] =
+            radius*Math.cos(phi);
+
+        positions[i*3+2] =
+            radius*Math.sin(phi)*Math.sin(theta);
+
+        velocities.push(
+
+            0.0005 +
+
+            Math.random()*0.001
 
         );
-
-    for (let i = 0; i < PARTICLES.COUNT; i++) {
-
-        const radius =
-
-            PARTICLES.CLOUD_RADIUS *
-
-            (0.7 + Math.random() * 0.6);
-
-        const theta =
-
-            Math.random() *
-
-            Math.PI * 2;
-
-        const phi =
-
-            Math.acos(
-
-                2 * Math.random() - 1
-
-            );
-
-        positions[i * 3 + 0] =
-
-            radius *
-
-            Math.sin(phi) *
-
-            Math.cos(theta);
-
-        positions[i * 3 + 1] =
-
-            radius *
-
-            Math.cos(phi);
-
-        positions[i * 3 + 2] =
-
-            radius *
-
-            Math.sin(phi) *
-
-            Math.sin(theta);
 
     }
 
@@ -121,34 +56,22 @@ export function createParticles(scene) {
 
     );
 
-    //-----------------------------------------
-    // Material
-    //-----------------------------------------
+    const material = new THREE.PointsMaterial({
 
-    const material =
-        new THREE.PointsMaterial({
+        color:0x6fdcff,
 
-            color: 0x66bbff,
+        size:0.03,
 
-            size: PARTICLES.SIZE,
+        transparent:true,
 
-            transparent: true,
+        opacity:0.65,
 
-            opacity: 0.55,
+        depthWrite:false
 
-            depthWrite: false,
+    });
 
-            blending:
+    particles =
 
-                THREE.AdditiveBlending
-
-        });
-
-    //-----------------------------------------
-    // System
-    //-----------------------------------------
-
-    particleSystem =
         new THREE.Points(
 
             geometry,
@@ -157,99 +80,6 @@ export function createParticles(scene) {
 
         );
 
-    particleGroup.add(
-
-        particleSystem
-
-    );
-
-    scene.add(
-
-        particleGroup
-
-    );
-
-}
-
-/*
-==========================================================
-Update
-==========================================================
-*/
-
-export function updateParticles(delta) {
-
-    if (!particleGroup)
-        return;
-
-    elapsed += delta;
-
-    //-----------------------------------------
-    // Slow rotation
-    //-----------------------------------------
-
-    particleGroup.rotation.y +=
-
-        delta *
-
-        PARTICLES.ROTATION_SPEED;
-
-    particleGroup.rotation.x =
-
-        Math.sin(
-
-            elapsed * 0.15
-
-        ) * 0.08;
-
-    //-----------------------------------------
-    // Gentle breathing
-    //-----------------------------------------
-
-    const scale =
-
-        1 +
-
-        Math.sin(
-
-            elapsed * 0.8
-
-        ) * 0.02;
-
-    particleGroup.scale.set(
-
-        scale,
-
-        scale,
-
-        scale
-
-    );
-
-    //-----------------------------------------
-    // Opacity pulse
-    //-----------------------------------------
-
-    particleSystem.material.opacity =
-
-        0.45 +
-
-        Math.sin(
-
-            elapsed * 2
-
-        ) * 0.10;
-
-}
-
-/*
-==========================================================
-Access
-==========================================================
-*/
-
-export function getParticles() {
-
-    return particleGroup;
+    scene.add(particles);
 
 }
