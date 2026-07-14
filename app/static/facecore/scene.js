@@ -1,4 +1,5 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.164/build/three.module.js";
+import { createOrb } from "./orb.js";
 
 export let scene;
 export let camera;
@@ -51,5 +52,7 @@ export function createScene() {
     );
 
     scene.add(key);
+
+    createOrb(scene);
 
 }
