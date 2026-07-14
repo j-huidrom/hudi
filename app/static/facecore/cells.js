@@ -1,87 +1,46 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.164/build/three.module.js";
 
-export let cells;
+export const cells = [];
 
-const COUNT = 180;
+export function createCells(scene) {
 
-let positions;
-let velocities;
+    const geometry = new THREE.SphereGeometry(0.018, 16, 16);
 
-export function createCells(scene){
-
-    const geometry = new THREE.BufferGeometry();
-
-    positions = new Float32Array(COUNT * 3);
-
-    velocities = [];
-
-    for(let i=0;i<COUNT;i++){
-
-        const radius = Math.random() * 0.82;
-
-        const theta = Math.random() * Math.PI * 2;
-
-        const phi = Math.acos(2 * Math.random() - 1);
-
-        const r = Math.cbrt(Math.random()) * radius;
-
-        positions[i*3] =
-            r * Math.sin(phi) * Math.cos(theta);
-
-        positions[i*3+1] =
-            r * Math.cos(phi);
-
-        positions[i*3+2] =
-            r * Math.sin(phi) * Math.sin(theta);
-
-        velocities.push(
-
-            0.0005 +
-
-            Math.random()*0.001
-
-        );
-
-    }
-
-    geometry.setAttribute(
-
-        "position",
-
-        new THREE.BufferAttribute(
-
-            positions,
-
-            3
-
-        )
-
-    );
-
-    const material = new THREE.PointsMaterial({
-
-        color:0x6fdcff,
-
-        size:0.03,
-
-        transparent:true,
-
-        opacity:0.65,
-
-        depthWrite:false
-
+    const material = new THREE.MeshBasicMaterial({
+        color: 0x9fe8ff
     });
 
-    cells =
+    for (let i = 0; i < 350; i++) {
 
-        new THREE.Points(
-
+        const cell = new THREE.Mesh(
             geometry,
+            material.clone()
+        );
 
-            material
+        // random point inside sphere
+        const r = Math.cbrt(Math.random()) * 0.92;
+
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.acos(2 * Math.random() - 1);
+
+        cell.position.set(
+
+            r * Math.sin(phi) * Math.cos(theta),
+
+            r * Math.sin(phi) * Math.sin(theta),
+
+            r * Math.cos(phi)
 
         );
 
-    scene.add(cells);
+        const s = 0.5 + Math.random();
+
+        cell.scale.set(s, s, s);
+
+        scene.add(cell);
+
+        cells.push(cell);
+
+    }
 
 }
