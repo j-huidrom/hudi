@@ -17,20 +17,22 @@ export function createParticles(scene){
 
     for(let i=0;i<COUNT;i++){
 
-        const radius = 1.35 + Math.random()*0.8;
+        const radius = Math.random() * 0.82;
 
-        const theta = Math.random()*Math.PI*2;
+        const theta = Math.random() * Math.PI * 2;
 
-        const phi = Math.acos(2*Math.random()-1);
+        const phi = Math.acos(2 * Math.random() - 1);
 
-        positions[i*3+0] =
-            radius*Math.sin(phi)*Math.cos(theta);
+        const r = Math.cbrt(Math.random()) * radius;
+
+        positions[i*3] =
+            r * Math.sin(phi) * Math.cos(theta);
 
         positions[i*3+1] =
-            radius*Math.cos(phi);
+            r * Math.cos(phi);
 
         positions[i*3+2] =
-            radius*Math.sin(phi)*Math.sin(theta);
+            r * Math.sin(phi) * Math.sin(theta);
 
         velocities.push(
 
