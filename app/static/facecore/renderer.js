@@ -1,6 +1,7 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.164/build/three.module.js";
 import { scene, camera } from "./scene.js";
 import { cells } from "./cells.js";
+import { updateJelly } from "./jelly.js";
 
 let renderer;
 
@@ -57,6 +58,10 @@ function animate(time = 0) {
         );
 
     });
+
+    const delta = 1/60;
+
+    updateJelly(delta);
 
     renderer.render(scene, camera);
 
