@@ -126,31 +126,50 @@ export function updateCells(){
 
         const d = cell.userData;
 
-        d.theta += d.speed*0.001;
+        // Slow orbital movement
+
+        d.theta += d.speed * 0.0015;
+
+        const r = d.radius;
+
+        cell.position.x =
+            r * Math.sin(d.phi) * Math.cos(d.theta);
+
+        cell.position.y =
+            r * Math.sin(d.phi) * Math.sin(d.theta);
+
+        cell.position.z =
+            r * Math.cos(d.phi);
+
+        // Brownian Motion
 
         cell.position.x +=
-            Math.sin(t+d.drift)*0.00035;
+            Math.sin(t*0.8 + d.drift) * 0.006;
 
         cell.position.y +=
-            Math.cos(t*0.7+d.drift)*0.00035;
+            Math.cos(t*0.6 + d.drift) * 0.006;
 
         cell.position.z +=
-            Math.sin(t*0.5+d.drift)*0.00025;
+            Math.sin(t*0.4 + d.drift) * 0.004;
+
+        // Organic Pulse
 
         const pulse =
-            0.9+
-            Math.sin(t*2+d.pulse)*0.15;
+            0.8 +
+            Math.sin(
+                t*2.5 + d.pulse
+            ) * 0.25;
 
-        cell.scale.setScalar(
+        const size =
+            0.012 + pulse*0.018;
 
-            cell.scale.x*0.98 +
-            (0.02+pulse*0.02)*0.02
-
-        );
+        cell.scale.set(size,size,1);
 
         cell.material.opacity =
-            0.45+
-            Math.sin(t*3+d.pulse)*0.25;
+            0.45 +
+            Math.sin(
+                t*3 + d.pulse
+            ) * 0.20;
 
     });
 
