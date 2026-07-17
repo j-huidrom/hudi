@@ -12,6 +12,8 @@ import { createFluid, updateFluid} from "./fluid.js";
 
 import {createCells,updateCells} from "./cells.js";
 
+import {createSignalCells,updateSignalCells} from "./signal.js";
+
 createMembrane(scene);
 
 createHalo(scene);
@@ -19,6 +21,8 @@ createHalo(scene);
 createFluid(scene);
 
 createCells(scene);
+
+createSignalCells(scene);
 
 function animate(){
 
@@ -29,6 +33,8 @@ updateMembrane();
 updateFluid();
 
 updateCells();
+
+updateSignalCells();
 
 renderer.render(scene,camera);
 
