@@ -1,81 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>HUDI | AI Professor</title>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.164/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164/examples/jsm/"
+  }
+}
+</script>
 
-<link rel="stylesheet" href="style.css">
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1.0">
+
+<title>HUDI Face</title>
+
+<link
+rel="stylesheet"
+href="./style.css">
+
+    <link rel="icon" href="./favicon.ico">
 
 </head>
 
 <body>
 
-<div class="layout">
+<div id="app"></div>
 
-    <div class="left-panel">
-
-        <div id="face" class="face ready">
-
-            <div class="face-ring">
-
-                <div class="ring-glow"></div>
-
-                <div class="ring-rotator">
-
-                    <div class="ring-beam"></div>
-
-                </div>
-
-                <div class="eyes">
-
-                    <div id="leftEye" class="eye"></div>
-
-                    <div id="rightEye" class="eye"></div>
-
-                </div>
-
-                <div id="mouth" class="mouth"></div>
-
-            </div>
-
-        </div>
-
-        <h1>HUDI</h1>
-
-        <div class="title">
-            AI Professor
-        </div>
-
-        <div class="state">
-
-            ●
-
-            <span id="state">
-                READY
-            </span>
-
-        </div>
-
-    </div>
-
-    <div class="right-panel">
-
-        <div class="chat-container">
-
-            <div id="chat" class="chat">
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<script src="script.js?v=20"></script>
+<script
+type="module"
+src="./main.js"></script>
 
 </body>
 
