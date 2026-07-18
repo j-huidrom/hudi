@@ -26,7 +26,7 @@ import requests
 DEFAULT_HOST = "https://face.huidrom.com"
 
 STATES = [
-    ("ready", "HUDI is ready."),
+    ("idle", "HUDI is ready."),
     ("listening", "Listening to user."),
     ("thinking", "Thinking..."),
     ("speaking", "Speaking response."),

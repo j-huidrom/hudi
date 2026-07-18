@@ -2,6 +2,7 @@ from openai import OpenAI
 from app.core.logger import log_request
 import os
 import time
+from app.core.face_manager import face_manager
 
 from app.core.intent_classifier import classify
 from app.core.prompt_builder import build_prompt
@@ -31,6 +32,11 @@ def chat(
         intent=intent,
     )
 
+    face_manager.update(
+        state="thinking",
+        message="Thinking..."
+    )
+
     response = _get_client().responses.create(
         model=model,
         input=[
@@ -52,6 +58,11 @@ def chat(
     )
 
     answer = response.output_text
+
+    face_manager.update(
+        state="speaking",
+        message=answer
+    )
 
     answer = format_response(answer)
 

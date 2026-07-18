@@ -14,6 +14,8 @@ import {createCells,updateCells} from "./cells.js";
 
 import {createSignalCells,updateSignalCells} from "./signal.js";
 
+import { setState, HUDI } from "./behavior.js";
+
 createMembrane(scene);
 
 createHalo(scene);
@@ -23,6 +25,45 @@ createFluid(scene);
 createCells(scene);
 
 createSignalCells(scene);
+
+setState("idle");
+
+
+// --------------------------------------------------
+// HUDI Debug API
+// --------------------------------------------------
+
+window.HUDI = {
+
+    setState,
+
+    state: HUDI,
+
+    idle() {
+        setState("idle");
+    },
+
+    listening() {
+        setState("listening");
+    },
+
+    thinking() {
+        setState("thinking");
+    },
+
+    speaking() {
+        setState("speaking");
+    }
+
+};
+
+console.log("HUDI Debug API Ready");
+console.log("Try:");
+console.log("HUDI.idle()");
+console.log("HUDI.listening()");
+console.log("HUDI.thinking()");
+console.log("HUDI.speaking()");
+
 
 function animate(){
 

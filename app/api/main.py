@@ -92,17 +92,6 @@ async def alexa(request: Request):
     session_id = get_session_id(payload)
     session = session_manager.get(session_id)
 
-    face_manager.update(
-        state="thinking",
-        message="Finding the best answer..."
-    )
-
-    
-    face_manager.update(
-        state="thinking",
-        message="Connecting to my AI brain..."
-    )
-
     result = hudi.process(message, session)
 
     face_manager.update(
@@ -200,7 +189,7 @@ def reset_face(response_text: str):
         time.sleep(delay)
 
         face_manager.update(
-            state="ready",
+            state="idle",
             message="Ask me anything about AI or Engineering."
         )
 

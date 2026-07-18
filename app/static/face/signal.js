@@ -1,5 +1,7 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.164/build/three.module.js";
 
+import { HUDI } from "./behavior.js";
+
 export let signalCells = [];
 
 const clock = new THREE.Clock();
@@ -74,30 +76,52 @@ function createTexture(){
 
 }
 
-export function updateSignalCells(){
+export function updateSignalCells() {
 
-    const t=clock.getElapsedTime();
+    const t = clock.getElapsedTime();
 
-    signalCells.forEach(c=>{
+    signalCells.forEach((cell, index) => {
 
-        const d=c.userData;
+        const d = cell.userData;
 
-        d.angle+=d.speed*0.01;
+        // Speed controlled by current HUDI state
+        d.angle += d.speed * 0.01 * HUDI.signal.speed;
 
-        c.position.x=Math.cos(d.angle)*d.radius;
+        // Slightly different orbit for each signal
+        const radius =
+            d.radius +
+            Math.sin(t * 0.4 + index) * 0.02;
 
-        c.position.z=Math.sin(d.angle)*d.radius;
+        cell.position.x =
+            Math.cos(d.angle) * radius;
 
-        c.position.y=d.height+
-            Math.sin(t+d.angle)*0.08;
+        cell.position.z =
+            Math.sin(d.angle) * radius;
 
-        const pulse=
+        cell.position.y =
+            d.height +
+            Math.sin(t * 2 + d.angle) * 0.08;
 
-            1+
+        // Brightness pulse
+        const pulse =
+            1 +
+            Math.sin(
+                t * 6 * HUDI.signal.speed +
+                d.angle
+            ) * 0.25;
 
-            Math.sin(t*6+d.angle)*0.25;
+        const size = 0.05 * pulse;
 
-        c.scale.setScalar(0.05*pulse);
+        cell.scale.set(size, size, 1);
+
+        cell.material.color.set(HUDI.cells.color);
+
+        cell.material.opacity =
+            0.6 +
+            0.4 * Math.sin(
+                t * 4 * HUDI.signal.speed +
+                d.angle
+            );
 
     });
 

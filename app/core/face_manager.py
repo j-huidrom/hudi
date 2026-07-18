@@ -6,7 +6,7 @@ class FaceManager:
     def __init__(self):
         self._lock = Lock()
 
-        self.state = "ready"
+        self.state = "idle"
         self.message = (
             "Yellow Buddy! I'm ready for your next engineering question."
         )

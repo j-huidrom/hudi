@@ -1,5 +1,7 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.164/build/three.module.js";
 
+import { HUDI } from "./behavior.js";
+
 export let cells = [];
 
 const clock = new THREE.Clock();
@@ -126,9 +128,8 @@ export function updateCells(){
 
         const d = cell.userData;
 
-        // Slow orbital movement
-
-        d.theta += d.speed * 0.0015;
+        // Speed changes with HUDI state
+        d.theta += d.speed * 0.0015 * HUDI.cells.speed;
 
         const r = d.radius;
 
@@ -141,35 +142,48 @@ export function updateCells(){
         cell.position.z =
             r * Math.cos(d.phi);
 
-        // Brownian Motion
+        // Brownian motion
 
         cell.position.x +=
-            Math.sin(t*0.8 + d.drift) * 0.006;
+            Math.sin(t + d.drift) * 0.005;
 
         cell.position.y +=
-            Math.cos(t*0.6 + d.drift) * 0.006;
+            Math.cos(t*0.7 + d.drift) * 0.005;
 
         cell.position.z +=
-            Math.sin(t*0.4 + d.drift) * 0.004;
+            Math.sin(t*0.4 + d.drift) * 0.003;
 
-        // Organic Pulse
+        // Organic pulse
 
         const pulse =
+
             0.8 +
+
             Math.sin(
-                t*2.5 + d.pulse
+                t * 2.5 * HUDI.cells.pulse +
+                d.pulse
             ) * 0.25;
 
         const size =
-            0.012 + pulse*0.018;
+            0.012 +
+            pulse * 0.018;
 
         cell.scale.set(size,size,1);
 
+        // Brightness
+
+        cell.material.color.set(HUDI.cells.color);
+
         cell.material.opacity =
-            0.45 +
-            Math.sin(
-                t*3 + d.pulse
-            ) * 0.20;
+
+            (
+                0.45 +
+
+                Math.sin(
+                    t*3+d.pulse
+                )*0.2
+
+            ) * HUDI.cells.brightness;
 
     });
 
