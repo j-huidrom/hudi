@@ -28,6 +28,38 @@ createSignalCells(scene);
 
 setState("idle");
 
+// --------------------------------------------------
+// HUDI SSE Connection
+// --------------------------------------------------
+
+const eventSource = new EventSource("/api/face/events");
+
+eventSource.onopen = () => {
+
+    console.log("✅ Connected to HUDI Face SSE");
+
+};
+
+eventSource.onmessage = (event) => {
+
+    const data = JSON.parse(event.data);
+
+    console.log("FACE EVENT", data);
+
+    if (data.state) {
+
+        setState(data.state);
+
+    }
+
+};
+
+eventSource.onerror = (err) => {
+
+    console.error("❌ SSE Connection Lost", err);
+
+};
+
 
 // --------------------------------------------------
 // HUDI Debug API

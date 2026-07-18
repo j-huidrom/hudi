@@ -23,10 +23,10 @@ import time
 import requests
 
 
-DEFAULT_HOST = "https://face.huidrom.com"
+DEFAULT_HOST = "https://api.huidrom.com"
 
 STATES = [
-    ("idle", "HUDI is ready."),
+    ("idlecls", "HUDI is ready."),
     ("listening", "Listening to user."),
     ("thinking", "Thinking..."),
     ("speaking", "Speaking response."),
